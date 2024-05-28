@@ -46,7 +46,7 @@ std::string QuanLyKho::nhapChuoi(const std::string &thongBao) {
     std::string input;
     char buffer[256];
     if (fgets(buffer, 256, stdin)) {
-        buffer[strcspn(buffer, "\n")] = 0; // Loại bỏ ký tự xuống dòng
+        buffer[strcspn(buffer, "\n")] = 0; // Loại bỏ ký tự xuống dòng, hàm strcspn dùng để check coi có kí tự xuống dòng trong string buffer hay không
         input = buffer;
     }
     return input;
@@ -61,7 +61,15 @@ std::vector<HangHoa>::iterator QuanLyKho::timHangHoa(const std::string &maHangHo
 // Thêm hàng hóa mới
 void QuanLyKho::themHangHoa() {
     HangHoa hangHoa;
-    hangHoa.maHangHoa = nhapChuoi("Nhap ma hang hoa: ");
+    int n;
+    std::cout<<"Quy khach muon nhap bao nhieu loai hang:\n";
+    std::cout<<"Nhap so loai hang can them:";
+    std::cin>>n;
+    for(int i=0;i<n;i++){
+    std::cout<<"LOAI HANG THU"<<i+1<<":\n";    
+    std::cout<<"Nhap ma hang hoa:";
+    std::cin>>hangHoa.maHangHoa ;
+    std::cin.ignore();
     hangHoa.loaiHangHoa = nhapChuoi("Nhap loai hang hoa: ");
     std::cout << "Nhap so luong ton kho: ";
     std::cin >> hangHoa.soLuongTonKho;
@@ -75,6 +83,7 @@ void QuanLyKho::themHangHoa() {
         std::cerr << "Hang hoa voi ma " << hangHoa.maHangHoa << " da ton tai.\n";
     } else {
         danhSachHangHoa.push_back(hangHoa);
+    }
     }
 }
 
