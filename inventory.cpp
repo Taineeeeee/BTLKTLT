@@ -66,7 +66,7 @@ void QuanLyKho::themHangHoa() {
     std::cout<<"Nhap so loai hang can them:";
     std::cin>>n;
     for(int i=0;i<n;i++){
-    std::cout<<"LOAI HANG THU"<<i+1<<":\n";    
+    std::cout<<"LOAI HANG THU "<<i+1<<":\n";    
     std::cout<<"Nhap ma hang hoa:";
     std::cin>>hangHoa.maHangHoa ;
     std::cin.ignore();
