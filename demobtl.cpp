@@ -342,25 +342,48 @@ int main() {
 
     int choice;
     do {
-        cout << "Menu:\n"
-             << "1. Receive Shipment\n"
-             << "2. List Shipments\n"
-             << "3. Update Shipment\n"
-             << "4. Delete Shipment\n"
-             << "5. Add Customer\n"
-             << "6. List Customers\n"
-             << "7. Update Customer\n"
-             << "8. Delete Customer\n"
-             << "9. Add Inventory\n"
-             << "10. List Inventory\n"
-             << "11. Update Inventory\n"
-             << "12. Delete Inventory\n"
-             << "13. Add Shipper\n"
-             << "14. List Shippers\n"
-             << "15. Update Shipper\n"
-             << "16. Delete Shipper\n"
-             << "17. Exit\n"
-             << "Enter your choice: ";
+        cout << " __________________________________________________ " << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|______________________________________________________|" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|              System delivery and receipt             |" << endl;
+        cout << "|______________________________________________________|" << endl;
+        cout << "|*                                                    *|" << endl;
+        cout << "|   ||\\"<<"\\        //|| ||======  ||\\"<<"\\    || ||       || |" << endl;
+        cout << "|   || \\"<<"\\      // || ||        || \\"<<"\\   || ||       || |" << endl;
+        cout << "|   ||  \\"<<"\\    //  || ||======  ||  \\"<<"\\  || ||       || |" << endl;
+        cout << "|   ||   \\"<<"\\  //   || ||        ||   \\"<<"\\ || ||       || |" << endl;
+        cout << "|   ||    \\"<<"\\//    || ||======  ||    \\"<<"\\||  \\"<<"\\=====// |" << endl;
+        cout << "|______________________________________________________|" << endl;
+        cout << "|                                                      |" << endl;
+        cout << "|  1.  Receive Shipment                                |" << endl;
+        cout << "|  2.  List Shipment                                   |" << endl;
+        cout << "|  3.  Update Shipment                                 |" << endl;
+        cout << "|  4.  Delete Shipment                                 |" << endl;
+        cout << "|  5.  Add Customer                                    |" << endl;
+        cout << "|  6.  List Customer                                   |" << endl;
+        cout << "|  7.  Update Customer                                 |" << endl;
+        cout << "|  8.  Delete Customer                                 |" << endl;
+        cout << "|  9.  Add Inventory                                   |" << endl;
+        cout << "|  10. List Inventory                                  |" << endl;
+        cout << "|  11. Updare Inventory                                |" << endl;
+        cout << "|  12. Delete Inventory                                |" << endl;
+        cout << "|  13. Add Shipper                                     |" << endl;
+        cout << "|  14. List Shipper                                    |" << endl;
+        cout << "|  15. Update Shipper                                  |" << endl;
+        cout << "|  16. Delete Shipper                                  |" << endl;
+        cout << "|  17.Exit                                             |" << endl;
+        cout << "|*____________________________________________________*|" << endl;
+        cout << "                                                        " << endl;
+        cout << "Nhap lua chon cua ban: ";
         cin >> choice;
 
         switch (choice) {

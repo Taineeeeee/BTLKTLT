@@ -1,2 +1,2 @@
-tài đẹp trai vãi lồn
+tài đẹp trai 
 //Anh Thơ com mít kiểu gì đấy!!!
