@@ -34,8 +34,32 @@ public:
     Shipment(string id, Date rdate, string customer, string address, string goods, Date ddate)
         : shipmentId(move(id)), receiveDate(move(rdate)), deliveryDate(move(ddate)), customerName(move(customer)), deliveryAddress(move(address)), goodsInfo(move(goods)), status(Received) {}
     // Thêm một đơn hàng
-    void addShipment(const Shipment& shipment) {
+    void addShipment() {
+        Shipment shipment;
+        cout << "-- Enter the information for new Shipment --" << endl;
+        cout << "Shipment ID: ";
+        cin >> shipment.shipmentId;
+        cout << "Receive Date: ";
+        cin >> shipment.receiveDate.day >> shipment.receiveDate.month >> shipment.receiveDate.year;
+        cout << "Delivery Date: ";
+        cin >> shipment.deliveryDate.day >> shipment.deliveryDate.month >> shipment.deliveryDate.year;
+        cout << "Customer Name: ";
+        cin.ignore();
+        getline(cin, shipment.customerName);
+        cout << "Delivery Address: ";
+        getline(cin, shipment.deliveryAddress);
+        cout << "Goods infomation: ";
+        getline(cin, shipment.goodsInfo);
+        cout << "Status: Received (0) / InTransit (1) / Delivered (2): ";
+        int statusChoice;
+        cin >> statusChoice;
+        shipment.status = static_cast<ShipmentStatus>(statusChoice);
         shipments.push_back(shipment);
+    }
+    // Cập nhât đơn hàng
+    void updateShipment() {
+        int
+            cout << "Enter the shippment ID needs to be updated: ";
     }
     // Xóa một đơn hàng theo ID
     void removeShipment(const string& shipmentId) {
@@ -75,62 +99,33 @@ public:
 };
 
 int main() {
-    Date receiveDate1 = { 28, 5, 2024 };
-    Date deliveryDate1 = { 28, 5, 2025 };
-    Date receiveDate2 = { 29, 5, 2024 };
-    Date deliveryDate2 = { 29, 5, 2025 };
-
+    int userChoice;
     Shipment manager; // tạo 1 biến quản lí
+    do {
+        cout << "SHIPMENT MENU" << endl;
+        cout << "1. Display all shipments" << endl;
+        cout << "2. Add shipment" << endl;
+        cout << "3. Update shipment" << endl;
+        cout << "4. Remove Shipment" << endl;
+        cout << "5. Find Shipment by ID" << endl;
+        cout << "0. Back to main menu" << endl;
+        cout << "Enter your choice: ";
+        cin >> userChoice;
 
-    Shipment shipment1("20233260", receiveDate1, "Viet Anh", "B5 Dormitory", "Books", deliveryDate1);
-    Shipment shipment2("20233261", receiveDate2, "Tai Le", "HUST", "Electronics", deliveryDate2);
-
-    manager.addShipment(shipment1);
-    manager.addShipment(shipment2);
-
-    cout << "Initial Shipments:\n";
-    manager.printAllShipments();
-
-    // Test update tay
-    shipment1.updateStatus(InTransit);
-    shipment1.printInfo();
-    shipment1.updateStatus(Delivered);
-    shipment1.printInfo();
-
-    // Test thêm đơn
-    // dùng auto. sẽ sửa để có menu ra vào 
-    auto addShipmentManually = [&manager]() {
-        string id, customer, address, goods;
-        Date receiveDate, deliveryDate;
-
-        cout << "Enter Shipment ID: ";
-        cin >> id;
-        cout << "Enter Receive Date (day month year): ";
-        cin >> receiveDate.day >> receiveDate.month >> receiveDate.year;
-        cout << "Enter Delivery Date (day month year): ";
-        cin >> deliveryDate.day >> deliveryDate.month >> deliveryDate.year;
-        cout << "Enter Customer Name: ";
-        cin.ignore(); // Xoá bộ dệm
-        getline(cin, customer);
-        cout << "Enter Delivery Address: ";
-        getline(cin, address);
-        cout << "Enter Goods Info: ";
-        getline(cin, goods);
-
-        Shipment newShipment(id, receiveDate, customer, address, goods, deliveryDate);
-        manager.addShipment(newShipment);
-    };
-    //Thêm tay 1 đơn
-    addShipmentManually();
-
-    // test sau khi thêm
-    cout << "Shipments after adding manually:\n";
-    manager.printAllShipments();
-
-    // Test xoá bằng tay 
-    manager.removeShipment("20233261");
-    cout << "Shipments after removal:\n";
-    manager.printAllShipments();
-
+        switch (userChoice) {
+        case 1:
+            manager.printAllShipments();
+            break;
+        case 2:
+            manager.addShipment();
+            break;
+        case 0:
+            cout << "Back to main menu!!!" << endl;
+            break;
+        default:
+            cout << "Invalid choice!" << endl;
+            break;
+        }
+    } while (userChoice != 0);
     return 0;
 }
