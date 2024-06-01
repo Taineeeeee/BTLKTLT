@@ -58,8 +58,7 @@ public:
     }
     // Cập nhât đơn hàng
     void updateShipment() {
-        int
-            cout << "Enter the shippment ID needs to be updated: ";
+        cout << "Enter the shippment ID needs to be updated: ";
     }
     // Xóa một đơn hàng theo ID
     void removeShipment(const string& shipmentId) {
