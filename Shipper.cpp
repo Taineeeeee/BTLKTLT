@@ -17,6 +17,7 @@ class Shipper
         void setid(int id){this->id = id;}
         void setname(std::string name){this->name = name;}
         void setphone(std::string phone){this->phone = phone;}
+        //Ham nhap cua tung shipper
         void input(){
             std::cout << "Nhap thong tin: " << std::endl;
             std::cout << "Nhap id:";
@@ -28,6 +29,7 @@ class Shipper
             getline(std::cin, phone);
             std::cout << "Nhap thanh cong!";
         }
+        //Ham hien thi cua tung shipper
         void display(){
             std::cout << "Thong tin: " << std::endl;
             std::cout << "Ten: " << name << std::endl;
@@ -36,20 +38,22 @@ class Shipper
         }
 };
 
+//vector quan ly nhieu shipper
 std::vector <Shipper> shippers;
 
+//Ham tra ve true/false tim shipper qua id
 bool find_id(std::string id, const Shipper& shipper){
     return std::to_string(shipper.getid()) == id;
 }
-
+//Ham tra ve true/false tim shipper qua sdt
 bool find_phone(std::string phone, const Shipper& shipper){
     return shipper.getphone() == phone;
 }
-
+//Ham tim iterator cua shipper
 std::vector<Shipper>::iterator find(std::string idx, bool(*findidx)(std::string, const Shipper&)){
     return std::find_if(shippers.begin(), shippers.end(), [&idx, findidx](const Shipper& shipper){return findidx(idx, shipper);});
 }
-
+//Ham them thong tin shipper
 void add_shipper(){
     system("CLS");
     Shipper addshipper;
@@ -58,6 +62,7 @@ void add_shipper(){
     std::string name;
     std::string phone;
     std::cout << "--Nhap thong tin shipper--" << std::endl;
+    //Nhap id shipper
     do{
     std::cout << "Nhap id: ";
     std::cin >> id;
@@ -68,10 +73,12 @@ void add_shipper(){
         addshipper.setid(id);
     }
     }while(it != shippers.end());
+    //Nhap ten shipper
     std::cout << "Nhap ten: ";
     std::cin.ignore();
     std::getline(std::cin, name);
     addshipper.setname(name);
+    //Nhap so dien thoai shipper
     do{
     std::cout << "Nhap so dien thoai: ";
     std::getline(std::cin, phone);
@@ -82,15 +89,18 @@ void add_shipper(){
         addshipper.setphone(phone);
     }
     }while (it != shippers.end());
+    //Them shipper vao vector
     shippers.push_back(addshipper);
+    system("pause");
 }
-
+//Ham sua thong tin shipper
 void update_shipper(){
     system("CLS");
     if(shippers.size()!=0){
         int id;
         std::vector<Shipper>::iterator it;
         std::cout << "--Sua thong tin shipper--" << std::endl;
+        //Sua thong tin shipper
         do{
             std::cout << "Nhap id shipper: ";
             std::cin >> id;
@@ -98,6 +108,7 @@ void update_shipper(){
             if(it==shippers.end()){
                 std::cerr << "ID: " << id << "khong ton tai!" << std::endl;
             }else{
+                //Hien thi thong tin truoc khi sua
                 std::cout << "Thong tin cu: " << std::endl;
                 it->display();
                 std::cout << "Hay sua lai thong tin: " << std::endl;
@@ -109,32 +120,33 @@ void update_shipper(){
                     std::cout << "Nhap id: ";
                     std::cin >> new_id;
                     it1 = find(std::to_string(new_id), find_id);
-                    if(it1 != shippers.end() && new_id != it1->getid()){
+                    if(it1 != shippers.end() && new_id != id){
                         std::cerr << "ID: " << new_id << "da ton tai!" << std::endl;
                     }else{
-                        it1->setid(new_id);
+                        it->setid(new_id);
                     }
-                }while (it1 != shippers.end() && new_id != it1->getid());
+                }while (it1 != shippers.end() && new_id != id);
                 std::cout << "Nhap ten: ";
                 std::cin.ignore();
-                std::getline(std::cin, new_name);s
+                std::getline(std::cin, new_name);
                 it->setname(new_name);
                 std::vector<Shipper>::iterator it2;
                 do{
                     std::cout << "Nhap so dien thoai: ";
                     std::getline(std::cin, new_phone);
                     it2 = find(new_phone, find_phone);
-                    if(it2!=shippers.end() && new_phone!=it2->getphone()){
+                    if(it2!=shippers.end() && new_phone != it->getphone()){
                         std::cerr << "So dien thoai: " << new_phone << "da ton tai!" << std::endl;
                     }else{
-                        it2->setphone(new_phone);
+                        it->setphone(new_phone);
                     }
-                }while (it2 != shippers.end() && new_phone!=it2->getphone());
+                }while (it2 != shippers.end() && new_phone != it->getphone());
             }
         }while (it == shippers.end());
     }else{
         std::cout << "Chua co shipper!" << std::endl;
     }
+    system("pause");
 }
 
 void delete_shipper(){
@@ -157,6 +169,7 @@ void delete_shipper(){
     }else{
         std::cout << "Chua co shipper!" << std::endl;
     }
+    system("pause");
 }
 
 void list_shipper(){
@@ -168,6 +181,7 @@ void list_shipper(){
         it->display();
         i++;
     }
+    system("pause");
 }
 
 void menu(){
