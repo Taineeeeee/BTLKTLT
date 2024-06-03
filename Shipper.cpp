@@ -67,6 +67,7 @@ void add_shipper(){
     std::cout << "Nhap id: ";
     std::cin >> id;
     it = find(std::to_string(id), find_id);
+    //Kiem tra xem ID ton tai chua
     if(it!=shippers.end()){
         std::cerr << "ID: " << id << "da ton tai!" << std::endl;
     }else{
@@ -120,6 +121,7 @@ void update_shipper(){
                     std::cout << "Nhap id: ";
                     std::cin >> new_id;
                     it1 = find(std::to_string(new_id), find_id);
+                    //Kiem tra xem ID da ton tai chua
                     if(it1 != shippers.end() && new_id != id){
                         std::cerr << "ID: " << new_id << "da ton tai!" << std::endl;
                     }else{
@@ -135,6 +137,7 @@ void update_shipper(){
                     std::cout << "Nhap so dien thoai: ";
                     std::getline(std::cin, new_phone);
                     it2 = find(new_phone, find_phone);
+                    //Kiem tra xem sdt da ton tai chua
                     if(it2!=shippers.end() && new_phone != it->getphone()){
                         std::cerr << "So dien thoai: " << new_phone << "da ton tai!" << std::endl;
                     }else{
@@ -144,11 +147,12 @@ void update_shipper(){
             }
         }while (it == shippers.end());
     }else{
+        //Neu chua co thong tin shipper nao thi in chua co shipper
         std::cout << "Chua co shipper!" << std::endl;
     }
     system("pause");
 }
-
+//Ham xoa thong tin shipper
 void delete_shipper(){
     system("CLS");
     if(shippers.size()!=0){
@@ -159,9 +163,11 @@ void delete_shipper(){
             std::cout << "Nhap ID shipper muon xoa: ";
             std::cin >> id;
             it = find(std::to_string(id), find_id);
+            //Kiem tra co ton tai ID khong
             if(it==shippers.end()){
                 std::cerr << "ID: " << id << "khong ton tai!" << std::endl;
             }else{
+                //Xoa thong tin shipper
                 shippers.erase(it);
                 break;
             }
@@ -171,7 +177,7 @@ void delete_shipper(){
     }
     system("pause");
 }
-
+//Ham in tat ca thong tin cua cac shipper
 void list_shipper(){
     system("CLS");
     std::cout << "--Danh sach cac shipper--" << std::endl;
@@ -216,6 +222,8 @@ void menu(){
                 std::cout << "Lua chon khong hop le!\n";
                 break;
         }
+        if(choice==5)
+            break;
     }
 }
 int main(){
