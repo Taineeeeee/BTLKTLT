@@ -6,6 +6,9 @@
 using namespace std;
 // Ba trạng thái của đơn hàng: Đã nhận, Đang giao, Đã giao
 enum ShipmentStatus { Received, InTransit, Delivered };
+// Hai trạng thái thanh toán cảu đơn hàng
+enum PaymentStatus { Unpaid, Paid };
+
 // Cấu trúc date
 struct Date {
     int day;
@@ -28,11 +31,11 @@ public:
     string deliveryAddress; // Địa chỉ cần giao
     string goodsInfo; // Thông tin hàng hoá trong đơn
     ShipmentStatus status; // Trạng thái đơn hàng
-
+    PaymentStatus pstatus;
     Shipment() = default;
     // Hàm tạo
     Shipment(string id, Date rdate, string customer, string address, string goods, Date ddate)
-        : shipmentId(move(id)), receiveDate(move(rdate)), deliveryDate(move(ddate)), customerName(move(customer)), deliveryAddress(move(address)), goodsInfo(move(goods)), status(Received) {}
+        : shipmentId(move(id)), receiveDate(move(rdate)), deliveryDate(move(ddate)), customerName(move(customer)), deliveryAddress(move(address)), goodsInfo(move(goods)), status(Received), pstatus(Unpaid) {}
     // Thêm một đơn hàng
     void addShipment() {
         Shipment shipment;
@@ -50,11 +53,30 @@ public:
         getline(cin, shipment.deliveryAddress);
         cout << "Goods infomation: ";
         getline(cin, shipment.goodsInfo);
-        cout << "Status: Received (0) / InTransit (1) / Delivered (2): ";
-        int statusChoice;
+        cout << "Shipment Status: Received (0) / InTransit (1) / Delivered (2): ";
+        int statusChoice, pstatusChoice;
         cin >> statusChoice;
         shipment.status = static_cast<ShipmentStatus>(statusChoice);
+        cout << "Payment Status: Unpaid (0) / Paid (1): ";
+        cin >> pstatusChoice;
+        shipment.pstatus = static_cast<PaymentStatus>(pstatusChoice);
+        cout << "Add shipment succesfully!" << endl;
         shipments.push_back(shipment);
+    }
+    // Tìm đơn hàng theo ID
+    vector<Shipment>::iterator findShipment(const string& id) {
+        auto it = std::find_if(shipments.begin(), shipments.end(),
+            [&id](const Shipment& shipment) { return shipment.shipmentId == id; });
+        if (it == shipments.end()) {
+            // Shipment not found
+            std::cout << "Shipment with ID " << id << " not found." << std::endl;
+            return it;
+        }
+        else {
+            // Shipment found
+            std::cout << "Shipment with ID " << id << " found." << std::endl;
+            return it;
+        }
     }
     // Cập nhât đơn hàng
     void updateShipment() {
@@ -74,7 +96,7 @@ public:
         }
     }
 
-    // Hàm cập nhật trạng thái đơn hàng
+    // Hàm cập nhật trạng thái đơn hàng 
     void updateStatus(ShipmentStatus newStatus) {
         status = newStatus;
     }
@@ -86,10 +108,12 @@ public:
             << "Customer Name: " << customerName << "\n"
             << "Delivery Address: " << deliveryAddress << "\n"
             << "Goods Info: " << goodsInfo << "\n"
-            << "Status: " << (status == Received ? "Received" : status == InTransit ? "In Transit" : "Delivered") << "\n";
+            << "Shipment Status: " << (status == Received ? "Received" : status == InTransit ? "In Transit" : "Delivered") << "\n"
+            << "Payment Status: " << (pstatus == Unpaid ? "Unpaid" : "Paid") << "\n";
     }
     //Hàm in tất cả đơn hàng
     void printAllShipments() const {
+        cout << "------------------------\n";
         for (const auto& shipment : shipments) {
             shipment.printInfo();
             cout << "------------------------\n";
@@ -99,6 +123,7 @@ public:
 
 int main() {
     int userChoice;
+    string id;
     Shipment manager; // tạo 1 biến quản lí
     do {
         cout << "SHIPMENT MENU" << endl;
@@ -117,6 +142,12 @@ int main() {
             break;
         case 2:
             manager.addShipment();
+            break;
+        case 5:
+            cout << "Enter the shipment ID to search for: ";
+            cin.ignore();
+            getline(cin, id);
+            manager.findShipment(id);
             break;
         case 0:
             cout << "Back to main menu!!!" << endl;
