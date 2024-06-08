@@ -40,7 +40,7 @@ int main() {
         cout << "|  8.  Delete Customer                                 |" << endl;
         cout << "|  9.  Add Inventory                                   |" << endl;
         cout << "|  10. List Inventory                                  |" << endl;
-        cout << "|  11. Updare Inventory                                |" << endl;
+        cout << "|  11. Update Inventory                                |" << endl;
         cout << "|  12. Delete Inventory                                |" << endl;
         cout << "|  13. Add Shipper                                     |" << endl;
         cout << "|  14. List Shipper                                    |" << endl;

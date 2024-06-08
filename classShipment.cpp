@@ -68,12 +68,12 @@ public:
         auto it = std::find_if(shipments.begin(), shipments.end(),
             [&id](const Shipment& shipment) { return shipment.shipmentId == id; });
         if (it == shipments.end()) {
-            // Shipment not found
+            // Không tìm thấy
             std::cout << "Shipment with ID " << id << " not found." << std::endl;
             return it;
         }
         else {
-            // Shipment found
+            // Tìm thấy
             std::cout << "Shipment with ID " << id << " found." << std::endl;
             return it;
         }
@@ -83,22 +83,17 @@ public:
         cout << "Enter the shippment ID needs to be updated: ";
     }
     // Xóa một đơn hàng theo ID
-    void removeShipment(const string& shipmentId) {
-        auto it = remove_if(shipments.begin(), shipments.end(), [&shipmentId](const Shipment& shipment) {
-            return shipment.shipmentId == shipmentId;
+    void removeShipment(const string& id) {
+        auto it = remove_if(shipments.begin(), shipments.end(), [&id](const Shipment& shipment) {
+            return shipment.shipmentId == id;
             });
         if (it != shipments.end()) {
             shipments.erase(it, shipments.end());
-            cout << "Shipment with ID " << shipmentId << " has been removed.\n";
+            cout << "Shipment with ID " << id << " has been removed.\n";
         }
         else {
-            cout << "Shipment with ID " << shipmentId << " not found.\n";
+            cout << "Shipment with ID " << id << " not found.\n";
         }
-    }
-
-    // Hàm cập nhật trạng thái đơn hàng 
-    void updateStatus(ShipmentStatus newStatus) {
-        status = newStatus;
     }
     // Hàm in thông tin đơn hàng
     void printInfo() const {
@@ -119,12 +114,22 @@ public:
             cout << "------------------------\n";
         }
     }
+    // Hàm trả về con trỏ
+    Shipment* shipmentPointer(const string& id) {
+        for (auto& shipment : shipments) {
+            if (shipment.shipmentId == id) {
+                return &shipment;
+            }
+        }
+        return nullptr;
+    }
 };
 
 int main() {
-    int userChoice;
+    int userChoice0, userChoice1;
     string id;
     Shipment manager; // tạo 1 biến quản lí
+    Shipment* p; // tạo 1 biến con trỏ
     do {
         cout << "SHIPMENT MENU" << endl;
         cout << "1. Display all shipments" << endl;
@@ -134,20 +139,53 @@ int main() {
         cout << "5. Find Shipment by ID" << endl;
         cout << "0. Back to main menu" << endl;
         cout << "Enter your choice: ";
-        cin >> userChoice;
+        cin >> userChoice0;
 
-        switch (userChoice) {
+        switch (userChoice0) {
         case 1:
             manager.printAllShipments();
             break;
         case 2:
             manager.addShipment();
             break;
+        case 4:
+            cout << "Enter the shipment ID to remove: ";
+            cin.ignore();
+            getline(cin, id);
+            manager.removeShipment(id);
+            break;
         case 5:
             cout << "Enter the shipment ID to search for: ";
             cin.ignore();
             getline(cin, id);
             manager.findShipment(id);
+            do {
+                cout << "1. Display information of ShipmentID: " << id << endl;
+                cout << "2. Update ShipmentID: " << id << endl;
+                cout << "3. Remove ShipmentID: " << id << endl;
+                cout << "0. Back to SHIPMENT menu" << endl;
+                cout << "Enter your choice: ";
+                cin >> userChoice1;
+
+                switch (userChoice1) {
+                case 1:
+                    cout << "------------------------\n";
+                    p = manager.shipmentPointer(id);
+                    p->printInfo();
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    manager.removeShipment(id);
+                    break;
+                case 0:
+                    cout << "Back to SHIPMENT menu!!!" << endl;
+                    break;
+                default:
+                    cout << "Invalid choice!" << endl;
+                    break;
+                }
+            } while (userChoice1 != 0);
             break;
         case 0:
             cout << "Back to main menu!!!" << endl;
@@ -156,6 +194,6 @@ int main() {
             cout << "Invalid choice!" << endl;
             break;
         }
-    } while (userChoice != 0);
+    } while (userChoice0 != 0);
     return 0;
 }
