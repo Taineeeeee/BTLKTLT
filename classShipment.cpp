@@ -209,14 +209,12 @@ public:
             cout << "------------------------\n";
         }
     }
-    // Hàm trả về con trỏ
-    Shipment* shipmentPointer(const string& id) {
-        for (auto& shipment : shipments) {
-            if (shipment.shipmentId == id) {
-                return &shipment;
-            }
-        }
-        return nullptr;
+    // Hàm sắp xếp theo ID
+    void sortShipmentsById() {
+        std::sort(shipments.begin(), shipments.end(),
+            [](const Shipment& a, const Shipment& b) {
+                return a.shipmentId < b.shipmentId;
+            });
     }
 };
 
@@ -224,12 +222,12 @@ int main() {
     int userChoice0;
     string id;
     Shipment manager; // tạo 1 biến quản lí
-    Shipment* p; // tạo 1 biến con trỏ
     do {
         cout << "SHIPMENT MENU" << endl;
         cout << "1. Display all shipments" << endl;
         cout << "2. Add shipment" << endl;
         cout << "3. Find Shipment by ID" << endl;
+        cout << "4. Sort shipments by ID" << endl;
         cout << "0. Back to main menu" << endl;
         cout << "Enter your choice: ";
         cin >> userChoice0;
@@ -246,6 +244,10 @@ int main() {
             cin.ignore();
             getline(cin, id);
             manager.findShipment(id);
+            break;
+        case 4:
+            manager.sortShipmentsById();
+            cout << "Shipments sorted by ID!" << endl;
             break;
         case 0:
             cout << "Back to main menu!!!" << endl;
