@@ -65,6 +65,7 @@ public:
     }
     // Tìm đơn hàng theo ID
     vector<Shipment>::iterator findShipment(const string& id) {
+        int userChoice1;
         auto it = std::find_if(shipments.begin(), shipments.end(),
             [&id](const Shipment& shipment) { return shipment.shipmentId == id; });
         if (it == shipments.end()) {
@@ -75,12 +76,106 @@ public:
         else {
             // Tìm thấy
             std::cout << "Shipment with ID " << id << " found." << std::endl;
+            do {
+                cout << "1. Display information of ShipmentID: " << id << endl;
+                cout << "2. Update ShipmentID: " << id << endl;
+                cout << "3. Remove ShipmentID: " << id << endl;
+                cout << "0. Back to SHIPMENT menu" << endl;
+                cout << "Enter your choice: ";
+                cin >> userChoice1;
+                switch (userChoice1) {
+                case 1:
+                    cout << "------------------------\n";
+                    it->printInfo();
+                    cout << "------------------------\n";
+                    break;
+                case 2:
+                    updateShipment(id);
+                    break;
+                case 3:
+                    removeShipment(id);
+                    return shipments.end(); //thoát khỏi vòng lặp xoá
+                case 0:
+                    cout << "Back to SHIPMENT menu!!!" << endl;
+                    break;
+                default:
+                    cout << "Invalid choice!" << endl;
+                    break;
+                }
+            } while (userChoice1 != 0);
             return it;
         }
     }
     // Cập nhât đơn hàng
-    void updateShipment() {
-        cout << "Enter the shippment ID needs to be updated: ";
+    void updateShipment(const string& id) {
+        auto it = std::find_if(shipments.begin(), shipments.end(),
+            [&id](const Shipment& shipment) { return shipment.shipmentId == id; });
+        int userChoice2;
+        do {
+            cout << "------------------------\n";
+            cout << "Select the information to update " << endl;
+            cout << "1. Receive Date" << endl;
+            cout << "2. Delivery Date" << endl;
+            cout << "3. Customer Name" << endl;
+            cout << "4. Delivery Address" << endl;
+            cout << "5. Goods Info" << endl;
+            cout << "6. Shipment Status" << endl;
+            cout << "7. Payment Status" << endl;
+            cout << "0. Back to Find Shipment MENU" << endl;
+            cout << "Enter your choice: ";
+            cin >> userChoice2;
+            switch (userChoice2) {
+            case 1:
+                cout << "Enter new Received Date: ";
+                cin >> it->receiveDate.day >> it->receiveDate.month >> it->receiveDate.year;
+                cout << "Update shipment successfully!" << endl;
+                break;
+            case 2:
+                cout << "Enter new Delivery Date: ";
+                cin >> it->deliveryDate.day >> it->deliveryDate.month >> it->deliveryDate.year;
+                cout << "Update shipment successfully!" << endl;
+                break;
+            case 3:
+                cout << "Enter new Customer Name: ";
+                cin.ignore();
+                getline(cin, it->customerName);
+                cout << "Update shipment successfully!" << endl;
+                break;
+            case 4:
+                cout << "Enter new Delivery Address: ";
+                cin.ignore();
+                getline(cin, it->deliveryAddress);
+                cout << "Update shipment successfully!" << endl;
+                break;
+            case 5:
+                cout << "Enter new Goods Info: ";
+                cin.ignore();
+                getline(cin, it->goodsInfo);
+                cout << "Update shipment successfully!" << endl;
+                break;
+            case 6:
+                cout << "Enter new Shipment Status: Received (0) / InTransit (1) / Delivered (2): ";
+                int statusChoice;
+                cin >> statusChoice;
+                it->status = static_cast<ShipmentStatus>(statusChoice);
+                cout << "Update shipment successfully!" << endl;
+                break;
+            case 7:
+                cout << "Enter new Payment Status: Unpaid (0) / Paid (1): ";
+                int pstatusChoice;
+                cin >> pstatusChoice;
+                it->pstatus = static_cast<PaymentStatus>(pstatusChoice);
+                cout << "Update shipment successfully!" << endl;
+                break;
+            case 0:
+                cout << "Back to Find Shipment MENU" << endl;
+                break;
+            default:
+                cout << "Invalid choice!" << endl;
+                break;
+            }
+        } while (userChoice2 != 0);
+
     }
     // Xóa một đơn hàng theo ID
     void removeShipment(const string& id) {
@@ -126,7 +221,7 @@ public:
 };
 
 int main() {
-    int userChoice0, userChoice1;
+    int userChoice0;
     string id;
     Shipment manager; // tạo 1 biến quản lí
     Shipment* p; // tạo 1 biến con trỏ
@@ -134,9 +229,7 @@ int main() {
         cout << "SHIPMENT MENU" << endl;
         cout << "1. Display all shipments" << endl;
         cout << "2. Add shipment" << endl;
-        cout << "3. Update shipment" << endl;
-        cout << "4. Remove Shipment" << endl;
-        cout << "5. Find Shipment by ID" << endl;
+        cout << "3. Find Shipment by ID" << endl;
         cout << "0. Back to main menu" << endl;
         cout << "Enter your choice: ";
         cin >> userChoice0;
@@ -148,44 +241,11 @@ int main() {
         case 2:
             manager.addShipment();
             break;
-        case 4:
-            cout << "Enter the shipment ID to remove: ";
-            cin.ignore();
-            getline(cin, id);
-            manager.removeShipment(id);
-            break;
-        case 5:
+        case 3:
             cout << "Enter the shipment ID to search for: ";
             cin.ignore();
             getline(cin, id);
             manager.findShipment(id);
-            do {
-                cout << "1. Display information of ShipmentID: " << id << endl;
-                cout << "2. Update ShipmentID: " << id << endl;
-                cout << "3. Remove ShipmentID: " << id << endl;
-                cout << "0. Back to SHIPMENT menu" << endl;
-                cout << "Enter your choice: ";
-                cin >> userChoice1;
-
-                switch (userChoice1) {
-                case 1:
-                    cout << "------------------------\n";
-                    p = manager.shipmentPointer(id);
-                    p->printInfo();
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    manager.removeShipment(id);
-                    break;
-                case 0:
-                    cout << "Back to SHIPMENT menu!!!" << endl;
-                    break;
-                default:
-                    cout << "Invalid choice!" << endl;
-                    break;
-                }
-            } while (userChoice1 != 0);
             break;
         case 0:
             cout << "Back to main menu!!!" << endl;
