@@ -1,6 +1,6 @@
 #ifndef SHIPMENT_H
 #define SHIPMENT_H
-
+#include <string>
 // Shipment status enumeration
 enum ShipmentStatus { Received, InTransit, Delivered };
 

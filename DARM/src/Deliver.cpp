@@ -20,15 +20,15 @@ int Deliver::getDeliverPhone() const {
     return deliverPhone;
 }
 
-void Deliver::setDeliverName(const std::string& name) {
+void Deliver::setDeliverName(std::string& name) {
     deliverName = name;
 }
 
-void Deliver::setDeliverAddress(const std::string& address) {
+void Deliver::setDeliverAddress(std::string& address) {
     deliverAddress = address;
 }
 
-void Deliver::setDeliverId(const std::string& id) {
+void Deliver::setDeliverId(std::string& id) {
     deliverId = id;
 }
 

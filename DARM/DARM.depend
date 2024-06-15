@@ -1,0 +1,44 @@
+# depslib dependency file v1.0
+1718459792 source:c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\src\deliver.cpp
+	"Deliver.h"
+
+1718459735 c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\include\deliver.h
+	<string>
+
+1718455700 source:c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\src\darm.cpp
+	"DARM.h"
+
+1718459830 c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\include\darm.h
+	"Shipper.h"
+	"Deliver.h"
+	"Receiver.h"
+	"Shipment.h"
+
+1718462609 c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\include\shipper.h
+	<string>
+
+1718459735 c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\include\receiver.h
+	<string>
+
+1718459735 c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\include\shipment.h
+	<string>
+
+1718455701 source:c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\src\receiver.cpp
+	"Receiver.h"
+
+1718455701 source:c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\src\shipment.cpp
+	"Shipment.h"
+
+1718455701 source:c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\src\shipper.cpp
+	"Shipper.h"
+
+1718455701 source:c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\src\main.cpp
+	<DARS.h>
+
+1718462156 c:\users\admin\desktop\ktlt c&c++\github\btlktlt\darm\include\dars.h
+	"DARM.h"
+	"Shipper.h"
+	"Deliver.h"
+	"Receiver.h"
+	"Shipment.h"
+

@@ -8,7 +8,7 @@
 class DARM: public Shipper, public Deliver, public Receiver, public Shipment
 {
     public:
-        void setDARM(std::string, std::string);
+        void setDARM(std::string&, std::string&, std::string&);
 };
 
 #endif // DARM_H

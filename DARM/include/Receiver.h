@@ -1,6 +1,6 @@
 #ifndef RECEIVER_H
 #define RECEIVER_H
-
+#include <string>
 
 class Receiver
 {

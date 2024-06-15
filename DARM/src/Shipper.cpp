@@ -4,7 +4,7 @@ Shipper::Shipper(){}
 
 Shipper::~Shipper(){}
 
-int Shipper::getid()const{
+std::string Shipper::getid()const{
     return id;
 }
 
@@ -16,7 +16,7 @@ std::string Shipper::getphone()const{
     return phone;
 }
 
-void Shipper::setid(int id){
+void Shipper::setid(std::string id){
     this->id = id;
 }
 

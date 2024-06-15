@@ -1,6 +1,6 @@
 #ifndef DELIVER_H
 #define DELIVER_H
-
+#include <string>
 
 class Deliver
 {

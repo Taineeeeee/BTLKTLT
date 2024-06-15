@@ -5,12 +5,7 @@
 #include "Deliver.h"
 #include "Receiver.h"
 #include "Shipment.h"
-#include <vector>
 
-vector <Shipment> shipments;
-vector <Shipper> shippers;
-vector <Deliver> delivers;
-vector <Receiver> receiver;
 
 void menu();
 void findInfoById(std::string);
@@ -26,9 +21,9 @@ void deleteReceiver();
 void addShipper();
 void updateShipper();
 void deleteShipper();
-void printShipmentInfo(str::string);
-void printShipperInfo(str::string);
-void printCustomerInfo(str::string);
+void printShipmentInfo(std::string);
+void printShipperInfo(std::string);
+void printCustomerInfo(std::string);
 void printAllShipmentInfo();
 void printAllShipperInfo();
 void printAllCustomerInfo();
