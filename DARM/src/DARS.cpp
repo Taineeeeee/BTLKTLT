@@ -1,0 +1,24 @@
+#include "DARS.h"
+#include <iostream>
+
+void menu(){}
+void findInfoById(std::string){}
+void addShipment(){}
+void updateShipment(){}
+void deleteShipment(){}
+void addDeliver(){}
+void updateDeliver(){}
+void deleteDeliver(){}
+void addReceiver(){}
+void updateReceiver(){}
+void deleteReceiver(){}
+void addShipper(){}
+void updateShipper(){}
+void deleteShipper(){}
+void printShipmentInfo(str::string){}
+void printShipperInfo(str::string){}
+void printCustomerInfo(str::string){}
+void printAllShipmentInfo(){}
+void printAllShipperInfo(){}
+void printAllCustomerInfo(){}
+void printAllShipmentOfCustomer(){}
