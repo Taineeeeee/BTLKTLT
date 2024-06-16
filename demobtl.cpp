@@ -2,441 +2,393 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <cstring>
+#include <stdexcept>
+#include "BaseCustomer.h"
 
-using namespace std;
-
-enum ShipmentStatus { Received, InTransit, Delivered };
-enum ShipperStatus { Free, Busy };
-
-struct Date {
-    int day;
-    int month;
-    int year;
-};
-
-struct Date inputDate() {
-    Date date;
-    cout << "Enter day: ";
-    cin >> date.day;
-    cout << "Enter month: ";
-    cin >> date.month;
-    cout << "Enter year: ";
-    cin >> date.year;
-    return date;
-}
-
-string dateToString(const Date& date) {
-    return to_string(date.day) + "/" + to_string(date.month) + "/" + to_string(date.year);
-}
-
-void inputString(char* str, int length, const char* prompt) {
-    cout << prompt;
-    cin.ignore(); // Ignore newline left in buffer
-    cin.getline(str, length);
-}
-
-class Shipment {
+class Customer : public BaseCustomer {
 public:
-    string shipmentId;
-    Date receiveDate;
-    string customerName;
-    string deliveryAddress;
-    string goodsInfo;
-    ShipmentStatus status;
+    std::string Phone;
 
-    Shipment(string id, Date date, string customer, string address, string goods)
-        : shipmentId(id), receiveDate(date), customerName(customer), deliveryAddress(address), goodsInfo(goods), status(Received) {}
+    //Customer() : BaseCustomer(), Phone() {}
 
-    void updateStatus(ShipmentStatus newStatus) {
-        status = newStatus;
-    }
-
-    void printInfo() const {
-        cout << "Shipment ID: " << shipmentId << "\n"
-             << "Receive Date: " << dateToString(receiveDate) << "\n"
-             << "Customer Name: " << customerName << "\n"
-             << "Delivery Address: " << deliveryAddress << "\n"
-             << "Goods Info: " << goodsInfo << "\n"
-             << "Status: " << (status == Received ? "Received" : status == InTransit ? "In Transit" : "Delivered") << "\n";
-    }
+    Customer(int id, const std::string& name, const std::string& address, const std::string& phone)
+        : BaseCustomer(id, name, address), Phone(phone) {}
 };
 
-class Customer {
+class CustomerManager {
 public:
-    string customerId;
-    string customerName;
-    string address;
-    string phoneNumber;
+    std::vector<Customer> listCustomer;
 
-    Customer(string id, string name, string addr, string phone)
-        : customerId(id), customerName(name), address(addr), phoneNumber(phone) {}
-
-    void printInfo() const {
-        cout << "Customer ID: " << customerId << "\n"
-             << "Customer Name: " << customerName << "\n"
-             << "Address: " << address << "\n"
-             << "Phone Number: " << phoneNumber << "\n";
-    }
+    void addCustomer();
+    void deleteCustomer();
+    void fixCustomer();
+    void printlistCustomer() const;
+    Customer getCustomer(int id) const;
 };
 
-class Inventory {
-public:
-    string goodsId;
-    string goodsType;
-    int quantity;
-    double price;
-
-    Inventory(string id, string type, int qty, double cost)
-        : goodsId(id), goodsType(type), quantity(qty), price(cost) {}
-
-    void updateQuantity(int newQty) {
-        quantity = newQty;
-    }
-
-    void printInfo() const {
-        cout << "Goods ID: " << goodsId << "\n"
-             << "Goods Type: " << goodsType << "\n"
-             << "Quantity: " << quantity << "\n"
-             << "Price: " << price << "\n";
-    }
-};
-
-class Shipper {
-public:
-    string shipperId;
-    string shipperName;
-    ShipperStatus status;
-    vector<Shipment> shipments;
-
-    Shipper(string id, string name)
-        : shipperId(id), shipperName(name), status(Free) {}
-
-    void addShipment(Shipment& shipment) {
-        shipments.push_back(shipment);
-        status = Busy;
-    }
-
-    void updateStatus(ShipperStatus newStatus) {
-        status = newStatus;
-    }
-
-    void printInfo() const {
-        cout << "Shipper ID: " << shipperId << "\n"
-             << "Shipper Name: " << shipperName << "\n"
-             << "Status: " << (status == Free ? "Free" : "Busy") << "\n"
-             << "Shipments: \n";
-        for (const auto& shipment : shipments) {
-            shipment.printInfo();
-            cout << "\n";
-        }
-    }
-};
-
-void receiveShipment(vector<Shipment>& shipments) {
-    string id, customer, address, goods;
-    Date date;
-    cout << "Enter Shipment ID: ";
-    cin >> id;
-    cout << "Enter Receive Date:\n";
-    date = inputDate();
-    char customerName[100], deliveryAddress[100], goodsInfo[100];
-    inputString(customerName, 100, "Enter Customer Name: ");
-    inputString(deliveryAddress, 100, "Enter Delivery Address: ");
-    inputString(goodsInfo, 100, "Enter Goods Info: ");
-    shipments.push_back(Shipment(id, date, customerName, deliveryAddress, goodsInfo));
+std::string inputstring(const std::string &prompt) {
+    std::string input;
+    std::cout << prompt;
+    std::getline(std::cin, input);
+    return input;
 }
 
-void listShipments(const vector<Shipment>& shipments) {
-    for (const auto& shipment : shipments) {
-        shipment.printInfo();
-        cout << "\n";
+void CustomerManager::addCustomer() {
+    int id;
+    std::string name, address, phone;
+
+    std::cout << "Enter customer ID: ";
+    std::cin >> id;
+    std::cin.ignore();
+    name = inputstring("Enter customer name: ");
+    address = inputstring("Enter customer address: ");
+    std::cout << "Enter customer phone number: ";
+    std::cin >> phone;
+
+    listCustomer.push_back(Customer(id, name, address, phone));
+}
+
+void CustomerManager::deleteCustomer() {
+    int id;
+    std::cout << "Enter customer ID to delete: ";
+    std::cin >> id;
+
+    auto it = std::find_if(listCustomer.begin(), listCustomer.end(), [id](const Customer &ci) {
+        return ci.ID == id;
+    });
+
+    if (it != listCustomer.end()) {
+        listCustomer.erase(it);
+        std::cout << "Customer deleted successfully.\n";
+    } else {
+        std::cout << "Customer with ID " << id << " does not exist!\n";
     }
 }
 
-void updateShipment(vector<Shipment>& shipments) {
-    string id;
-    cout << "Enter Shipment ID to update: ";
-    cin >> id;
-    for (auto& shipment : shipments) {
-        if (shipment.shipmentId == id) {
-            Date date;
-            int status;
-            cout << "Enter new Receive Date:\n";
-            date = inputDate();
-            char customerName[100], deliveryAddress[100], goodsInfo[100];
-            inputString(customerName, 100, "Enter new Customer Name: ");
-            inputString(deliveryAddress, 100, "Enter new Delivery Address: ");
-            inputString(goodsInfo, 100, "Enter new Goods Info: ");
-            cout << "Enter new Status (0: Received, 1: In Transit, 2: Delivered): ";
-            cin >> status;
-            shipment.receiveDate = date;
-            shipment.customerName = customerName;
-            shipment.deliveryAddress = deliveryAddress;
-            shipment.goodsInfo = goodsInfo;
-            shipment.status = static_cast<ShipmentStatus>(status);
-            return;
-        }
-    }
-    cout << "Shipment not found.\n";
-}
+void CustomerManager::fixCustomer() {
+    int id;
+    std::cout << "Enter customer ID to fix: ";
+    std::cin >> id;
 
-void deleteShipment(vector<Shipment>& shipments) {
-    string id;
-    cout << "Enter Shipment ID to delete: ";
-    cin >> id;
-    shipments.erase(remove_if(shipments.begin(), shipments.end(),
-        [&id](Shipment& shipment) { return shipment.shipmentId == id; }), shipments.end());
-}
+    auto it = std::find_if(listCustomer.begin(), listCustomer.end(), [id](const Customer &ci) {
+        return ci.ID == id;
+    });
 
-void addCustomer(vector<Customer>& customers) {
-    string id, phone;
-    cout << "Enter Customer ID: ";
-    cin >> id;
-    char name[100], address[100];
-    inputString(name, 100, "Enter Customer Name: ");
-    inputString(address, 100, "Enter Address: ");
-    cout << "Enter Phone Number: ";
-    cin >> phone;
-    customers.push_back(Customer(id, name, address, phone));
-}
-
-void listCustomers(const vector<Customer>& customers) {
-    for (const auto& customer : customers) {
-        customer.printInfo();
-        cout << "\n";
-    }
-}
-
-void updateCustomer(vector<Customer>& customers) {
-    string id;
-    cout << "Enter Customer ID to update: ";
-    cin >> id;
-    for (auto& customer : customers) {
-        if (customer.customerId == id) {
-            char name[100], address[100];
-            string phone;
-            inputString(name, 100, "Enter new Customer Name: ");
-            inputString(address, 100, "Enter new Address: ");
-            cout << "Enter new Phone Number: ";
-            cin >> phone;
-            customer.customerName = name;
-            customer.address = address;
-            customer.phoneNumber = phone;
-            return;
-        }
-    }
-    cout << "Customer not found.\n";
-}
-
-void deleteCustomer(vector<Customer>& customers) {
-    string id;
-    cout << "Enter Customer ID to delete: ";
-    cin >> id;
-    customers.erase(remove_if(customers.begin(), customers.end(),
-        [&id](Customer& customer) { return customer.customerId == id; }), customers.end());
-}
-
-void addInventory(vector<Inventory>& inventories) {
-    string id, type;
-    int qty;
-    double cost;
-    cout << "Enter Goods ID: ";
-    cin >> id;
-    cout << "Enter Goods Type: ";
-    cin >> type;
-    cout << "Enter Quantity: ";
-    cin >> qty;
-    cout << "Enter Price: ";
-    cin >> cost;
-    inventories.push_back(Inventory(id, type, qty, cost));
-}
-
-void listInventory(const vector<Inventory>& inventories) {
-    for (const auto& inventory : inventories) {
-        inventory.printInfo();
-        cout << "\n";
-    }
-}
-
-void updateInventory(vector<Inventory>& inventories) {
-    string id;
-    cout << "Enter Goods ID to update: ";
-    cin >> id;
-    for (auto& inventory : inventories) {
-        if (inventory.goodsId == id) {
-            string type;
-            int qty;
-            double cost;
-            cout << "Enter new Goods Type: ";
-            cin >> type;
-            cout << "Enter new Quantity: ";
-            cin >> qty;
-            cout << "Enter new Price: ";
-            cin >> cost;
-            inventory.goodsType = type;
-            inventory.quantity = qty;
-            inventory.price = cost;
-            return;
-        }
-    }
-    cout << "Inventory not found.\n";
-}
-
-void deleteInventory(vector<Inventory>& inventories) {
-    string id;
-    cout << "Enter Goods ID to delete: ";
-    cin >> id;
-    inventories.erase(remove_if(inventories.begin(), inventories.end(),
-        [&id](Inventory& inventory) { return inventory.goodsId == id; }), inventories.end());
-}
-
-void addShipper(vector<Shipper>& shippers) {
-    string id;
-    char name[100];
-    cout << "Enter Shipper ID: ";
-    cin >> id;
-    inputString(name, 100, "Enter Shipper Name: ");
-    shippers.push_back(Shipper(id, name));
-}
-
-void listShippers(const vector<Shipper>& shippers) {
-    for (const auto& shipper : shippers) {
-        shipper.printInfo();
-        cout << "\n";
-    }
-}
-
-void updateShipper(vector<Shipper>& shippers) {
-    string id;
-    cout << "Enter Shipper ID to update: ";
-    cin >> id;
-    for (auto& shipper : shippers) {
-        if (shipper.shipperId == id) {
-            char name[100];
-            int status;
-            inputString(name, 100, "Enter new Shipper Name: ");
-            cout << "Enter new Status (0: Free, 1: Busy): ";
-            cin >> status;
-            shipper.shipperName = name;
-            shipper.status = static_cast<ShipperStatus>(status);
-            return;
-        }
-    }
-    cout << "Shipper not found.\n";
-}
-
-void deleteShipper(vector<Shipper>& shippers) {
-    string id;
-    cout << "Enter Shipper ID to delete: ";
-    cin >> id;
-    shippers.erase(remove_if(shippers.begin(), shippers.end(),
-        [&id](Shipper& shipper) { return shipper.shipperId == id; }), shippers.end());
-}
-
-int main() {
-    vector<Shipment> shipments;
-    vector<Customer> customers;
-    vector<Inventory> inventories;
-    vector<Shipper> shippers;
-
-    int choice;
-    do {
-        cout << " __________________________________________________ " << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|______________________________________________________|" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|              System delivery and receipt             |" << endl;
-        cout << "|______________________________________________________|" << endl;
-        cout << "|*                                                    *|" << endl;
-        cout << "|   ||\\"<<"\\        //|| ||======  ||\\"<<"\\    || ||       || |" << endl;
-        cout << "|   || \\"<<"\\      // || ||        || \\"<<"\\   || ||       || |" << endl;
-        cout << "|   ||  \\"<<"\\    //  || ||======  ||  \\"<<"\\  || ||       || |" << endl;
-        cout << "|   ||   \\"<<"\\  //   || ||        ||   \\"<<"\\ || ||       || |" << endl;
-        cout << "|   ||    \\"<<"\\//    || ||======  ||    \\"<<"\\||  \\"<<"\\=====// |" << endl;
-        cout << "|______________________________________________________|" << endl;
-        cout << "|                                                      |" << endl;
-        cout << "|  1.  Receive Shipment                                |" << endl;
-        cout << "|  2.  List Shipment                                   |" << endl;
-        cout << "|  3.  Update Shipment                                 |" << endl;
-        cout << "|  4.  Delete Shipment                                 |" << endl;
-        cout << "|  5.  Add Customer                                    |" << endl;
-        cout << "|  6.  List Customer                                   |" << endl;
-        cout << "|  7.  Update Customer                                 |" << endl;
-        cout << "|  8.  Delete Customer                                 |" << endl;
-        cout << "|  9.  Add Inventory                                   |" << endl;
-        cout << "|  10. List Inventory                                  |" << endl;
-        cout << "|  11. Updare Inventory                                |" << endl;
-        cout << "|  12. Delete Inventory                                |" << endl;
-        cout << "|  13. Add Shipper                                     |" << endl;
-        cout << "|  14. List Shipper                                    |" << endl;
-        cout << "|  15. Update Shipper                                  |" << endl;
-        cout << "|  16. Delete Shipper                                  |" << endl;
-        cout << "|  17.Exit                                             |" << endl;
-        cout << "|*____________________________________________________*|" << endl;
-        cout << "                                                        " << endl;
-        cout << "Nhap lua chon cua ban: ";
-        cin >> choice;
+    if (it != listCustomer.end()) {
+        std::cout << "What information do you want to edit?\n";
+        std::cout << "1. ID\n2. Name\n3. Address\n4. Phone\n";
+        int choice;
+        std::cin >> choice;
+        std::cin.ignore(); // Ignore newline left in buffer
 
         switch (choice) {
             case 1:
-                receiveShipment(shipments);
+                std::cout << "Enter the new customer ID: ";
+                std::cin >> it->ID;
+                std::cin.ignore();
                 break;
             case 2:
-                listShipments(shipments);
+                it->Name = inputstring("Enter the new customer name: ");
                 break;
             case 3:
-                updateShipment(shipments);
+                it->Address = inputstring("Enter the new customer address: ");
                 break;
             case 4:
-                deleteShipment(shipments);
+                std::cout << "Enter the new customer phone number: ";
+                std::cin >> it->Phone;
                 break;
-            case 5:
-                addCustomer(customers);
-                break;
-            case 6:
-                listCustomers(customers);
-                break;
-            case 7:
-                updateCustomer(customers);
-                break;
-            case 8:
-                deleteCustomer(customers);
-                break;
-            case 9:
-                addInventory(inventories);
-                break;
-            case 10:
-                listInventory(inventories);
-                break;
-            case 11:
-                updateInventory(inventories);
-                break;
-            case 12:
-                deleteInventory(inventories);
-                break;
-            case 13:
-                addShipper(shippers);
-                break;
-            case 14:
-                listShippers(shippers);
-                break;
-            case 15:
-                updateShipper(shippers);
-                break;
-            case 16:
-                deleteShipper(shippers);
+            default:
+                std::cout << "Invalid choice!\n";
                 break;
         }
-    } while (choice != 17);
+    } else {
+        std::cout << "Customer with ID " << id << " does not exist!\n";
+    }
+}
 
+void CustomerManager::printlistCustomer() const {
+    for (const auto &kh : listCustomer) {
+        std::cout << "\nCustomer ID: " << kh.ID;
+        std::cout << "\nCustomer Name: " << kh.Name;
+        std::cout << "\nCustomer Address: " << kh.Address;
+        std::cout << "\nCustomer Phone Number: " << kh.Phone << "\n";
+    }
+}
+
+Customer CustomerManager::getCustomer(int id) const {
+    for (const auto& kh : listCustomer) {
+        if (kh.ID == id) {
+            return kh;
+        }
+    }
+    throw std::invalid_argument("Customer ID not found.");
+}
+
+void menuCustomer(CustomerManager& manager){
+    int choice;
+    do {
+        std::cout << "1. Delete customer\n";
+        std::cout << "2. Add customer\n";
+        std::cout << "3. Edit customer\n";
+        std::cout << "4. Print customer list\n";
+        std::cout << "5. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+        std::cin.ignore(); // Ignore newline left in buffer
+        switch (choice) {
+            case 1:
+                manager.deleteCustomer();
+                break;
+            case 2:
+                manager.addCustomer();
+                break;
+            case 3:
+                manager.fixCustomer();
+                break;
+            case 4:
+                manager.printlistCustomer();
+                break;
+            case 5:
+                std::cout << "Exiting the program.\n";
+                break;
+            default:
+                std::cout << "Invalid choice!\n";
+                break;
+        }
+    } while (choice != 5);
+}
+
+/*class shipment*/
+// Shipment status enumeration
+enum ShipmentStatus { Received, InTransit, Delivered };
+
+// Payment status enumeration
+enum PaymentStatus { Unpaid, Paid };
+
+// Date structure
+struct Date {
+    int day, month, year;
+};
+
+// Convert date to string
+std::string dateToString(const Date& date) {
+    return std::to_string(date.day) + "/" + std::to_string(date.month) + "/" + std::to_string(date.year);
+}
+
+class Shipment : public BaseCustomer {
+public:
+    std::string shipmentId;
+    Date receiveDate, deliveryDate;
+    std::string goodsInfo;
+    ShipmentStatus status;
+    PaymentStatus pstatus;
+
+    Shipment(std::string id, Date rdate, const BaseCustomer& customer, std::string goods, Date ddate)
+        : BaseCustomer(customer), shipmentId(std::move(id)), receiveDate(std::move(rdate)), deliveryDate(std::move(ddate)), goodsInfo(std::move(goods)), status(Received), pstatus(Unpaid) {}
+
+    void printInfo() const {
+        std::cout << "Shipment ID: " << shipmentId << "\n"
+            << "Receive Date: " << dateToString(receiveDate) << "\n"
+            << "Delivery Date: " << dateToString(deliveryDate) << "\n"
+            << "Customer Name: " << Name << "\n"
+            << "Delivery Address: " << Address << "\n"
+            << "Goods Info: " << goodsInfo << "\n"
+            << "Shipment Status: " << (status == Received ? "Received" : status == InTransit ? "In Transit" : "Delivered") << "\n"
+            << "Payment Status: " << (pstatus == Unpaid ? "Unpaid" : "Paid") << "\n";
+    }
+};
+
+// ShipmentManager class definition
+class ShipmentManager {
+private:
+    std::vector<Shipment> shipments;
+
+public:
+    void addShipment(const BaseCustomer& customer) {
+        std::string id, goods;
+        Date rdate, ddate;
+
+        std::cout << "-- Enter the information for new Shipment --" << std::endl;
+        std::cout << "Shipment ID: ";
+        std::cin >> id;
+        std::cout << "Receive Date (dd mm yyyy): ";
+        std::cin >> rdate.day >> rdate.month >> rdate.year;
+        std::cout << "Delivery Date (dd mm yyyy): ";
+        std::cin >> ddate.day >> ddate.month >> ddate.year;
+        std::cin.ignore();
+        std::cout << "Goods Info: ";
+        std::getline(std::cin, goods);
+
+        Shipment newShipment(id, rdate, customer, goods, ddate);
+        shipments.push_back(newShipment);
+        std::cout << "Shipment added successfully!" << std::endl;
+    }
+
+    void findShipment(const std::string& id) {
+        auto it = std::find_if(shipments.begin(), shipments.end(), [&id](const Shipment& s) { return s.shipmentId == id; });
+
+        if (it == shipments.end()) {
+            std::cout << "Shipment with ID " << id << " not found." << std::endl;
+            return;
+        }
+
+        std::cout << "Shipment with ID " << id << " found." << std::endl;
+        it->printInfo();
+    }
+
+    void updateShipment(const std::string& id) {
+        auto it = std::find_if(shipments.begin(), shipments.end(), [&id](const Shipment& s) { return s.shipmentId == id; });
+
+        if (it == shipments.end()) {
+            std::cout << "Shipment with ID " << id << " not found." << std::endl;
+            return;
+        }
+
+        int choice;
+        do {
+            std::cout << "Select the information to update:\n";
+            std::cout << "1. Receive Date\n2. Delivery Date\n3. Customer Name\n4. Delivery Address\n5. Goods Info\n6. Shipment Status\n7. Payment Status\n0. Exit\n";
+            std::cout << "Enter your choice: "; std::cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    std::cout << "Enter new Received Date (day month year): ";
+                    std::cin >> it->receiveDate.day >> it->receiveDate.month >> it->receiveDate.year; break;
+                case 2:
+                    std::cout << "Enter new Delivery Date (day month year): ";
+                    std::cin >> it->deliveryDate.day >> it->deliveryDate.month >> it->deliveryDate.year; break;
+                case 3:
+                    std::cout << "Enter new Customer Name: ";
+                    std::cin.ignore(); std::getline(std::cin, it->Name); break;
+                case 4:
+                    std::cout << "Enter new Delivery Address: ";
+                    std::cin.ignore(); std::getline(std::cin, it->Address); break;
+                case 5:
+                    std::cout << "Enter new Goods Info: ";
+                    std::cin.ignore(); std::getline(std::cin, it->goodsInfo); break;
+                case 6:
+                    std::cout << "Enter new Shipment Status: Received (0) / InTransit (1) / Delivered (2): ";
+                    int statusChoice; std::cin >> statusChoice; it->status = static_cast<ShipmentStatus>(statusChoice); break;
+                case 7:
+                    std::cout << "Enter new Payment Status: Unpaid (0) / Paid (1): ";
+                    int pstatusChoice; std::cin >> pstatusChoice; it->pstatus = static_cast<PaymentStatus>(pstatusChoice); break;
+                case 0:
+                    std::cout << "Exiting update menu." << std::endl; break;
+                default:
+                    std::cout << "Invalid choice!" << std::endl; break;
+            }
+        } while (choice != 0);
+    }
+
+    void removeShipment(const std::string& id) {
+        auto it = std::remove_if(shipments.begin(), shipments.end(), [&id](const Shipment& s) { return s.shipmentId == id; });
+
+        if (it != shipments.end()) {
+            shipments.erase(it, shipments.end());
+            std::cout << "Shipment with ID " << id << " has been removed." << std::endl;
+        } else {
+            std::cout << "Shipment with ID " << id << " not found." << std::endl;
+        }
+    }
+
+    void printAllShipments() const {
+        for (const auto& shipment : shipments) {
+            shipment.printInfo();
+            std::cout << "------------------------\n";
+        }
+    }
+
+    void sortShipmentsById(bool ascending = true) {
+        std::sort(shipments.begin(), shipments.end(),
+            [ascending](const Shipment& a, const Shipment& b) {
+                return ascending ? (a.shipmentId < b.shipmentId) : (a.shipmentId > b.shipmentId);
+            });
+    }
+
+    void sortShipmentsByName(bool ascending = true) {
+        std::sort(shipments.begin(), shipments.end(),
+            [ascending](const Shipment& a, const Shipment& b) {
+                return ascending ? (a.Name < b.Name) : (a.Name > b.Name);
+            });
+    }
+};
+
+void menuShipment(ShipmentManager& manager) {
+    int choice;
+    std::string id;
+
+    do {
+        std::cout << "SHIPMENT MENU\n1. Display all shipments\n2. Add shipment\n3. Find shipment\n4. Update shipment\n5. Remove shipment\n6. Sort shipments\n0. Exit\n";
+        std::cout << "Enter your choice: "; std::cin >> choice;
+        std::cin.ignore(); // Ignore newline left in buffer
+        switch (choice) {
+            case 1: manager.printAllShipments(); break;
+            case 2: 
+                {
+                    BaseCustomer customer(1, "John Doe", "123 Main St"); // Sample customer
+                    manager.addShipment(customer); 
+                }
+                break;
+            case 3:
+                std::cout << "Enter Shipment ID to find: "; std::cin >> id;
+                manager.findShipment(id); break;
+            case 4:
+                std::cout << "Enter Shipment ID to update: "; std::cin >> id;
+                manager.updateShipment(id); break;
+            case 5:
+                std::cout << "Enter Shipment ID to remove: "; std::cin >> id;
+                manager.removeShipment(id); break;
+            case 6:
+                int sortChoice, orderChoice;
+                std::cout << "1. Sort by ID\n2. Sort by Name" << std::endl;
+                std::cout << "Enter your choice: "; std::cin >> sortChoice;
+                std::cout << "1. Ascending\n2. Descending" << std::endl;
+                std::cout << "Enter your choice: "; std::cin >> orderChoice;
+                if (sortChoice == 1) {
+                    manager.sortShipmentsById(orderChoice == 1);
+                    std::cout << "Shipments sorted by ID!" << std::endl;
+                } else if (sortChoice == 2) {
+                    manager.sortShipmentsByName(orderChoice == 1);
+                    std::cout << "Shipments sorted by Name!" << std::endl;
+                } else {
+                    std::cout << "Invalid sort choice!" << std::endl;
+                }
+                break;
+            case 0:
+                std::cout << "Exiting the program." << std::endl; break;
+            default:
+                std::cout << "Invalid choice!" << std::endl; break;
+        }
+    } while (choice != 0);
+}
+
+int main() {
+    std::cout << "Moi ban chon dich vu\n";
+    int choice;
+    CustomerManager customerManager;
+    ShipmentManager shipmentManager;
+    
+    do {
+        std::cout << "1. Customer\n";
+        std::cout << "2. Shipment\n";
+        std::cout << "3. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+        std::cin.ignore(); // Ignore newline left in buffer
+        switch (choice) {
+            case 1:
+                menuCustomer(customerManager);
+                break;
+            case 2:
+                menuShipment(shipmentManager);
+                break;
+            case 3:
+                std::cout << "Exiting the program.\n";
+                break;
+            default:
+                std::cout << "Invalid choice!\n";
+                break;
+        }
+    } while (choice != 3);
     return 0;
 }
