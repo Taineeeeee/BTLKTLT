@@ -234,6 +234,8 @@ public:
     void updateShipment(const std::string& id); // Cập nhật thông tin lô hàng
     void removeShipment(const std::string& id); // Xóa lô hàng
     void printListShipment() const; // In danh sách lô hàng
+    void sortShipmentsById(bool ascending = true); // Sắp xếp lô hàng theo ID
+    void sortShipmentsByName(bool ascending = true); // Sắp xếp lô hàng theo tên khách hàng
 };
 
 // Tìm khách hàng trong CustomerManager theo ID
@@ -351,6 +353,25 @@ void ShipmentManager::removeShipment(const std::string& id) {
     }
     system("pause"); // Tạm dừng chương trình
 }
+// Sắp xếp lô hàng theo ID
+void ShipmentManager::sortShipmentsById(bool ascending) {
+    system("CLS");
+    std::cout<<"Shipments sort by ID successfully\n";
+    system("pause");
+    std::sort(shipments.begin(), shipments.end(), [ascending](const Shipment& a, const Shipment& b) {
+    return ascending ? a.shipmentId < b.shipmentId : a.shipmentId > b.shipmentId;
+});
+}
+
+// Sắp xếp lô hàng theo tên khách hàng
+void ShipmentManager::sortShipmentsByName(bool ascending) {
+    system("CLS");
+    std::cout<<"Shipments sort by Name successfully\n";
+    system("pause");
+    std::sort(shipments.begin(), shipments.end(), [ascending](const Shipment& a, const Shipment& b) {
+    return ascending ? a.Name < b.Name : a.Name > b.Name;
+});
+}
 
 // In danh sách lô hàng
 void ShipmentManager::printListShipment() const {
@@ -374,9 +395,11 @@ void menuShipment(ShipmentManager& shipmentManager, const CustomerManager& custo
         std::cout << "==            3. Update Shipment                  ==\n";
         std::cout << "==            4. Remove Shipment                  ==\n";
         std::cout << "==            5. Print Shipment List              ==\n";
-        std::cout << "==            6. Exit                             ==\n";
+        std::cout << "==            6. Sort shipments by ID             ==\n";
+        std::cout << "==            7. Sort shipments by name           ==\n";
+        std::cout << "==            8. Exit                             ==\n";
         std::cout << "====================================================\n";
-        std::cout <<"Enter your choice:"; 
+        std::cout <<"Enter your choice:";
         std::cin >> choice;
         std::cin.ignore(); // Bỏ qua newline trong bộ đệm
         switch (choice) {
@@ -409,18 +432,23 @@ void menuShipment(ShipmentManager& shipmentManager, const CustomerManager& custo
                 break;
             case 5:
                 shipmentManager.printListShipment();
-                break;
+                break;    
             case 6:
-                std::cout << "Exiting the program.\n";
+                shipmentManager.sortShipmentsById();
+                break;
+            case 7:
+                shipmentManager.sortShipmentsByName();
+                break;
+            case 8:
+                std::cout << "Exiting the shipment management system.\n";
                 break;
             default:
                 std::cout << "Invalid choice!\n";
                 system("pause"); // Tạm dừng chương trình
                 break;
-        }
-    } while (choice != 6);
+    }
+} while (choice != 8);
 }
-
 int main() {
     CustomerManager customerManager;
     ShipmentManager shipmentManager;
