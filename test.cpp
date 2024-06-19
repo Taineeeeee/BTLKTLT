@@ -5,27 +5,28 @@
 #include <stdexcept>
 #include "BaseCustomer.h"
 
+// Lớp Customer kế thừa từ BaseCustomer
 class Customer : public BaseCustomer {
 public:
-    std::string Phone;
-
-    //Customer() : BaseCustomer(), Phone() {}
+    std::string Phone; // Số điện thoại khách hàng
 
     Customer(int id, const std::string& name, const std::string& address, const std::string& phone)
         : BaseCustomer(id, name, address), Phone(phone) {}
 };
 
+// Quản lý danh sách khách hàng
 class CustomerManager {
 public:
-    std::vector<Customer> listCustomer;
+    std::vector<Customer> listCustomer; // Danh sách khách hàng
 
-    void addCustomer();
-    void deleteCustomer();
-    void fixCustomer();
-    void printlistCustomer() const;
-    Customer getCustomer(int id) const;
+    void addCustomer(); // Thêm khách hàng mới
+    void deleteCustomer(); // Xóa khách hàng
+    void fixCustomer(); // Sửa thông tin khách hàng
+    void printlistCustomer() const; // In danh sách khách hàng
+    Customer getCustomer(int id) const; // Lấy thông tin khách hàng theo ID
 };
 
+// Hàm nhập chuỗi từ người dùng với prompt
 std::string inputstring(const std::string &prompt) {
     std::string input;
     std::cout << prompt;
@@ -33,6 +34,7 @@ std::string inputstring(const std::string &prompt) {
     return input;
 }
 
+// Thêm khách hàng mới vào danh sách
 void CustomerManager::addCustomer() {
     int id;
     std::string name, address, phone;
@@ -45,31 +47,35 @@ void CustomerManager::addCustomer() {
     std::cout << "Enter customer phone number: ";
     std::cin >> phone;
 
-    listCustomer.push_back(Customer(id, name, address, phone));
+    listCustomer.push_back(Customer(id, name, address, phone)); // Thêm khách hàng vào danh sách
 }
 
+// Xóa khách hàng khỏi danh sách
 void CustomerManager::deleteCustomer() {
     int id;
     std::cout << "Enter customer ID to delete: ";
     std::cin >> id;
 
+    // Tìm khách hàng trong danh sách
     auto it = std::find_if(listCustomer.begin(), listCustomer.end(), [id](const Customer &ci) {
         return ci.ID == id;
     });
 
     if (it != listCustomer.end()) {
-        listCustomer.erase(it);
+        listCustomer.erase(it); // Xóa khách hàng khỏi danh sách
         std::cout << "Customer deleted successfully.\n";
     } else {
         std::cout << "Customer with ID " << id << " does not exist!\n";
     }
 }
 
+// Sửa thông tin khách hàng
 void CustomerManager::fixCustomer() {
     int id;
     std::cout << "Enter customer ID to fix: ";
     std::cin >> id;
 
+    // Tìm khách hàng trong danh sách
     auto it = std::find_if(listCustomer.begin(), listCustomer.end(), [id](const Customer &ci) {
         return ci.ID == id;
     });
@@ -79,8 +85,9 @@ void CustomerManager::fixCustomer() {
         std::cout << "1. ID\n2. Name\n3. Address\n4. Phone\n";
         int choice;
         std::cin >> choice;
-        std::cin.ignore(); // Ignore newline left in buffer
+        std::cin.ignore(); // Bỏ qua newline trong bộ đệm
 
+        // Cập nhật thông tin khách hàng theo lựa chọn
         switch (choice) {
             case 1:
                 std::cout << "Enter the new customer ID: ";
@@ -106,6 +113,7 @@ void CustomerManager::fixCustomer() {
     }
 }
 
+// In danh sách khách hàng
 void CustomerManager::printlistCustomer() const {
     for (const auto &kh : listCustomer) {
         std::cout << "\nCustomer ID: " << kh.ID;
@@ -115,6 +123,7 @@ void CustomerManager::printlistCustomer() const {
     }
 }
 
+// Lấy thông tin khách hàng theo ID
 Customer CustomerManager::getCustomer(int id) const {
     for (const auto& kh : listCustomer) {
         if (kh.ID == id) {
@@ -124,17 +133,21 @@ Customer CustomerManager::getCustomer(int id) const {
     throw std::invalid_argument("Customer ID not found.");
 }
 
+// Menu quản lý khách hàng
 void menuCustomer(CustomerManager& manager){
     int choice;
     do {
-        std::cout << "1. Delete customer\n";
-        std::cout << "2. Add customer\n";
-        std::cout << "3. Edit customer\n";
-        std::cout << "4. Print customer list\n";
-        std::cout << "5. Exit\n";
-        std::cout << "Enter your choice: ";
+        std::cout << "\t\tBIET DOI HIGH CODE\t" << std::endl;
+        std::cout << "====================MENU-CUSTOMER===================\n";
+        std::cout << "==            1.Delete customer                   ==\n";
+        std::cout << "==            2.Add customer                      ==\n";
+        std::cout << "==            3.Edit customer                     ==\n";
+        std::cout << "==            4.Print customer list               ==\n";
+        std::cout << "==            5.Exit                              ==\n";
+        std::cout << "====================================================\n";
+        std::cout <<"Enter your choice:"; 
         std::cin >> choice;
-        std::cin.ignore(); // Ignore newline left in buffer
+        std::cin.ignore(); // Bỏ qua newline trong bộ đệm
         switch (choice) {
             case 1:
                 manager.deleteCustomer();
@@ -158,23 +171,23 @@ void menuCustomer(CustomerManager& manager){
     } while (choice != 5);
 }
 
-/*class shipment*/
-// Shipment status enumeration
+// Enum trạng thái vận chuyển
 enum ShipmentStatus { Received, InTransit, Delivered };
 
-// Payment status enumeration
+// Enum trạng thái thanh toán
 enum PaymentStatus { Unpaid, Paid };
 
-// Date structure
+// Cấu trúc ngày tháng
 struct Date {
     int day, month, year;
 };
 
-// Convert date to string
+// Chuyển đổi ngày tháng sang chuỗi
 std::string dateToString(const Date& date) {
     return std::to_string(date.day) + "/" + std::to_string(date.month) + "/" + std::to_string(date.year);
 }
 
+// Lớp Shipment kế thừa từ BaseCustomer
 class Shipment : public BaseCustomer {
 public:
     std::string shipmentId;
@@ -186,6 +199,7 @@ public:
     Shipment(std::string id, Date rdate, const BaseCustomer& customer, std::string goods, Date ddate)
         : BaseCustomer(customer), shipmentId(std::move(id)), receiveDate(std::move(rdate)), deliveryDate(std::move(ddate)), goodsInfo(std::move(goods)), status(Received), pstatus(Unpaid) {}
 
+    // In thông tin lô hàng
     void printInfo() const {
         std::cout << "Shipment ID: " << shipmentId << "\n"
             << "Receive Date: " << dateToString(receiveDate) << "\n"
@@ -198,189 +212,233 @@ public:
     }
 };
 
-// ShipmentManager class definition
+// Quản lý danh sách lô hàng
 class ShipmentManager {
 private:
-    std::vector<Shipment> shipments;
+    std::vector<Shipment> shipments; // Danh sách lô hàng
 
 public:
-    void addShipment(const BaseCustomer& customer) {
-        std::string id, goods;
-        Date rdate, ddate;
-
-        std::cout << "-- Enter the information for new Shipment --" << std::endl;
-        std::cout << "Shipment ID: ";
-        std::cin >> id;
-        std::cout << "Receive Date (dd mm yyyy): ";
-        std::cin >> rdate.day >> rdate.month >> rdate.year;
-        std::cout << "Delivery Date (dd mm yyyy): ";
-        std::cin >> ddate.day >> ddate.month >> ddate.year;
-        std::cin.ignore();
-        std::cout << "Goods Info: ";
-        std::getline(std::cin, goods);
-
-        Shipment newShipment(id, rdate, customer, goods, ddate);
-        shipments.push_back(newShipment);
-        std::cout << "Shipment added successfully!" << std::endl;
-    }
-
-    void findShipment(const std::string& id) {
-        auto it = std::find_if(shipments.begin(), shipments.end(), [&id](const Shipment& s) { return s.shipmentId == id; });
-
-        if (it == shipments.end()) {
-            std::cout << "Shipment with ID " << id << " not found." << std::endl;
-            return;
-        }
-
-        std::cout << "Shipment with ID " << id << " found." << std::endl;
-        it->printInfo();
-    }
-
-    void updateShipment(const std::string& id) {
-        auto it = std::find_if(shipments.begin(), shipments.end(), [&id](const Shipment& s) { return s.shipmentId == id; });
-
-        if (it == shipments.end()) {
-            std::cout << "Shipment with ID " << id << " not found." << std::endl;
-            return;
-        }
-
-        int choice;
-        do {
-            std::cout << "Select the information to update:\n";
-            std::cout << "1. Receive Date\n2. Delivery Date\n3. Customer Name\n4. Delivery Address\n5. Goods Info\n6. Shipment Status\n7. Payment Status\n0. Exit\n";
-            std::cout << "Enter your choice: "; std::cin >> choice;
-
-            switch (choice) {
-                case 1:
-                    std::cout << "Enter new Received Date (day month year): ";
-                    std::cin >> it->receiveDate.day >> it->receiveDate.month >> it->receiveDate.year; break;
-                case 2:
-                    std::cout << "Enter new Delivery Date (day month year): ";
-                    std::cin >> it->deliveryDate.day >> it->deliveryDate.month >> it->deliveryDate.year; break;
-                case 3:
-                    std::cout << "Enter new Customer Name: ";
-                    std::cin.ignore(); std::getline(std::cin, it->Name); break;
-                case 4:
-                    std::cout << "Enter new Delivery Address: ";
-                    std::cin.ignore(); std::getline(std::cin, it->Address); break;
-                case 5:
-                    std::cout << "Enter new Goods Info: ";
-                    std::cin.ignore(); std::getline(std::cin, it->goodsInfo); break;
-                case 6:
-                    std::cout << "Enter new Shipment Status: Received (0) / InTransit (1) / Delivered (2): ";
-                    int statusChoice; std::cin >> statusChoice; it->status = static_cast<ShipmentStatus>(statusChoice); break;
-                case 7:
-                    std::cout << "Enter new Payment Status: Unpaid (0) / Paid (1): ";
-                    int pstatusChoice; std::cin >> pstatusChoice; it->pstatus = static_cast<PaymentStatus>(pstatusChoice); break;
-                case 0:
-                    std::cout << "Exiting update menu." << std::endl; break;
-                default:
-                    std::cout << "Invalid choice!" << std::endl; break;
-            }
-        } while (choice != 0);
-    }
-
-    void removeShipment(const std::string& id) {
-        auto it = std::remove_if(shipments.begin(), shipments.end(), [&id](const Shipment& s) { return s.shipmentId == id; });
-
-        if (it != shipments.end()) {
-            shipments.erase(it, shipments.end());
-            std::cout << "Shipment with ID " << id << " has been removed." << std::endl;
-        } else {
-            std::cout << "Shipment with ID " << id << " not found." << std::endl;
-        }
-    }
-
-    void printAllShipments() const {
-        for (const auto& shipment : shipments) {
-            shipment.printInfo();
-            std::cout << "------------------------\n";
-        }
-    }
-
-    void sortShipmentsById(bool ascending = true) {
-        std::sort(shipments.begin(), shipments.end(),
-            [ascending](const Shipment& a, const Shipment& b) {
-                return ascending ? (a.shipmentId < b.shipmentId) : (a.shipmentId > b.shipmentId);
-            });
-    }
-
-    void sortShipmentsByName(bool ascending = true) {
-        std::sort(shipments.begin(), shipments.end(),
-            [ascending](const Shipment& a, const Shipment& b) {
-                return ascending ? (a.Name < b.Name) : (a.Name > b.Name);
-            });
-    }
+    void addShipment(const CustomerManager& customerManager); // Thêm lô hàng mới
+    void findShipment(const std::string& id) const; // Tìm lô hàng theo ID
+    void updateShipment(const std::string& id); // Cập nhật thông tin lô hàng
+    void removeShipment(const std::string& id); // Xóa lô hàng
+    void printAllShipments() const; // In danh sách lô hàng
+    void sortShipmentsById(bool ascending = true); // Sắp xếp lô hàng theo ID
+    void sortShipmentsByName(bool ascending = true); // Sắp xếp lô hàng theo tên khách hàng
 };
 
-void menuShipment(ShipmentManager& manager) {
-    int choice;
-    std::string id;
+// Thêm lô hàng mới vào danh sách
+void ShipmentManager::addShipment(const CustomerManager& customerManager) {
+    std::string id, goods;
+    Date rdate, ddate;
+    int customerId;
 
-    do {
-        std::cout << "SHIPMENT MENU\n1. Display all shipments\n2. Add shipment\n3. Find shipment\n4. Update shipment\n5. Remove shipment\n6. Sort shipments\n0. Exit\n";
-        std::cout << "Enter your choice: "; std::cin >> choice;
-        std::cin.ignore(); // Ignore newline left in buffer
+    std::cout << "-- Enter the information for new Shipment --" << std::endl;
+    std::cout << "Shipment ID: ";
+    std::cin >> id;
+    std::cout << "Receive Date (dd mm yyyy): ";
+    std::cin >> rdate.day >> rdate.month >> rdate.year;
+    std::cout << "Delivery Date (dd mm yyyy): ";
+    std::cin >> ddate.day >> ddate.month >> ddate.year;
+    std::cout << "Customer ID: ";
+    std::cin >> customerId;
+
+    try {
+        Customer customer = customerManager.getCustomer(customerId);
+        std::cout << "Goods Info: ";
+        std::cin.ignore();
+        std::getline(std::cin, goods);
+
+        shipments.push_back(Shipment(id, rdate, customer, goods, ddate));
+        std::cout << "Shipment added successfully!\n";
+    } catch (const std::invalid_argument& e) {
+        std::cout << "Error: " << e.what() << "\n";
+    }
+}
+
+// Tìm lô hàng theo ID và in thông tin
+void ShipmentManager::findShipment(const std::string& id) const {
+    auto it = std::find_if(shipments.begin(), shipments.end(), [&id](const Shipment& shipment) {
+        return shipment.shipmentId == id;
+    });
+
+    if (it != shipments.end()) {
+        it->printInfo();
+    } else {
+        std::cout << "Shipment with ID " << id << " not found!\n";
+    }
+}
+
+// Cập nhật thông tin lô hàng
+void ShipmentManager::updateShipment(const std::string& id) {
+    auto it = std::find_if(shipments.begin(), shipments.end(), [&id](Shipment& shipment) {
+        return shipment.shipmentId == id;
+    });
+
+    if (it != shipments.end()) {
+        int choice;
+        std::cout << "What information do you want to update?\n";
+        std::cout << "1. Status\n2. Payment Status\n";
+        std::cin >> choice;
+
         switch (choice) {
-            case 1: manager.printAllShipments(); break;
-            case 2: 
+            case 1:
+                std::cout << "Enter new status (0: Received, 1: In Transit, 2: Delivered): ";
+                int newStatus;
+                std::cin >> newStatus;
+                if (newStatus >= 0 && newStatus <= 2) {
+                    it->status = static_cast<ShipmentStatus>(newStatus);
+                    std::cout << "Shipment status updated!\n";
+                } else {
+                    std::cout << "Invalid status!\n";
+                }
+                break;
+            case 2:
+                std::cout << "Enter new payment status (0: Unpaid, 1: Paid): ";
+                int newPaymentStatus;
+                std::cin >> newPaymentStatus;
+                if (newPaymentStatus >= 0 && newPaymentStatus <= 1) {
+                    it->pstatus = static_cast<PaymentStatus>(newPaymentStatus);
+                    std::cout << "Payment status updated!\n";
+                } else {
+                    std::cout << "Invalid payment status!\n";
+                }
+                break;
+            default:
+                std::cout << "Invalid choice!\n";
+                break;
+        }
+    } else {
+        std::cout << "Shipment with ID " << id << " not found!\n";
+    }
+}
+
+// Xóa lô hàng khỏi danh sách
+void ShipmentManager::removeShipment(const std::string& id) {
+    auto it = std::find_if(shipments.begin(), shipments.end(), [&id](const Shipment& shipment) {
+        return shipment.shipmentId == id;
+    });
+
+    if (it != shipments.end()) {
+        shipments.erase(it);
+        std::cout << "Shipment removed successfully!\n";
+    } else {
+        std::cout << "Shipment with ID " << id << " not found!\n";
+    }
+}
+
+// In danh sách tất cả các lô hàng
+void ShipmentManager::printAllShipments() const {
+    if (shipments.empty()) {
+        std::cout << "No shipments available.\n";
+        return;
+    }
+    for (const auto& shipment : shipments) {
+        shipment.printInfo();
+        std::cout << "--------------------------------\n";
+    }
+}
+
+// Sắp xếp lô hàng theo ID
+void ShipmentManager::sortShipmentsById(bool ascending) {
+    std::sort(shipments.begin(), shipments.end(), [ascending](const Shipment& a, const Shipment& b) {
+        return ascending ? a.shipmentId < b.shipmentId : a.shipmentId > b.shipmentId;
+    });
+}
+
+// Sắp xếp lô hàng theo tên khách hàng
+void ShipmentManager::sortShipmentsByName(bool ascending) {
+    std::sort(shipments.begin(), shipments.end(), [ascending](const Shipment& a, const Shipment& b) {
+        return ascending ? a.Name < b.Name : a.Name > b.Name;
+    });
+}
+
+// Menu quản lý lô hàng
+void menuShipment(ShipmentManager& shipmentManager, const CustomerManager& customerManager) {
+    int choice;
+    do {
+        std::cout << "\t\tBIET DOI HIGH CODE\t" << std::endl;
+        std::cout << "====================MENU-SHIPMENT====================\n";
+        std::cout << "==            1. Add shipment                      ==\n";
+        std::cout << "==            2. Find shipment                     ==\n";
+        std::cout << "==            3. Update shipment                   ==\n";
+        std::cout << "==            4. Remove shipment                   ==\n";
+        std::cout << "==            5. Print all shipments               ==\n";
+        std::cout << "==            6. Sort shipments by ID              ==\n";
+        std::cout << "==            7. Sort shipments by name            ==\n";
+        std::cout << "==            8. Exit                              ==\n";
+        std::cout << "=====================================================\n";
+        std::cout <<"Enter your choice:";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                shipmentManager.addShipment(customerManager);
+                break;
+            case 2:
                 {
-                    BaseCustomer customer(1, "John Doe", "123 Main St"); // Sample customer
-                    manager.addShipment(customer); 
+                    std::string id;
+                    std::cout << "Enter Shipment ID to find: ";
+                    std::cin >> id;
+                    shipmentManager.findShipment(id);
                 }
                 break;
             case 3:
-                std::cout << "Enter Shipment ID to find: "; std::cin >> id;
-                manager.findShipment(id); break;
-            case 4:
-                std::cout << "Enter Shipment ID to update: "; std::cin >> id;
-                manager.updateShipment(id); break;
-            case 5:
-                std::cout << "Enter Shipment ID to remove: "; std::cin >> id;
-                manager.removeShipment(id); break;
-            case 6:
-                int sortChoice, orderChoice;
-                std::cout << "1. Sort by ID\n2. Sort by Name" << std::endl;
-                std::cout << "Enter your choice: "; std::cin >> sortChoice;
-                std::cout << "1. Ascending\n2. Descending" << std::endl;
-                std::cout << "Enter your choice: "; std::cin >> orderChoice;
-                if (sortChoice == 1) {
-                    manager.sortShipmentsById(orderChoice == 1);
-                    std::cout << "Shipments sorted by ID!" << std::endl;
-                } else if (sortChoice == 2) {
-                    manager.sortShipmentsByName(orderChoice == 1);
-                    std::cout << "Shipments sorted by Name!" << std::endl;
-                } else {
-                    std::cout << "Invalid sort choice!" << std::endl;
+                {
+                    std::string id;
+                    std::cout << "Enter Shipment ID to update: ";
+                    std::cin >> id;
+                    shipmentManager.updateShipment(id);
                 }
                 break;
-            case 0:
-                std::cout << "Exiting the program." << std::endl; break;
+            case 4:
+                {
+                    std::string id;
+                    std::cout << "Enter Shipment ID to remove: ";
+                    std::cin >> id;
+                    shipmentManager.removeShipment(id);
+                }
+                break;
+            case 5:
+                shipmentManager.printAllShipments();
+                break;
+            case 6:
+                shipmentManager.sortShipmentsById();
+                break;
+            case 7:
+                shipmentManager.sortShipmentsByName();
+                break;
+            case 8:
+                std::cout << "Exiting the shipment management system.\n";
+                break;
             default:
-                std::cout << "Invalid choice!" << std::endl; break;
+                std::cout << "Invalid choice!\n";
+                break;
         }
-    } while (choice != 0);
+    } while (choice != 8);
 }
 
 int main() {
-    std::cout << "Moi ban chon dich vu\n";
-    int choice;
     CustomerManager customerManager;
     ShipmentManager shipmentManager;
-    
+
+    int mainChoice;
     do {
-        std::cout << "1. Customer\n";
-        std::cout << "2. Shipment\n";
-        std::cout << "3. Exit\n";
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
-        std::cin.ignore(); // Ignore newline left in buffer
-        switch (choice) {
+        std::cout << "\t\tBIET DOI HIGH CODE\t" << std::endl;
+        std::cout << "=======================MAIN MENU======================\n";
+        std::cout << "==            1. Customer management                ==\n";
+        std::cout << "==            2. Shipment management                ==\n";
+        std::cout << "==            3. Exit                               ==\n";
+        std::cout << "======================================================\n";
+        std::cout <<"Enter your choice:";                 
+        std::cin >> mainChoice;
+
+        switch (mainChoice) {
             case 1:
                 menuCustomer(customerManager);
                 break;
             case 2:
-                menuShipment(shipmentManager);
+                menuShipment(shipmentManager, customerManager);
                 break;
             case 3:
                 std::cout << "Exiting the program.\n";
@@ -389,6 +447,7 @@ int main() {
                 std::cout << "Invalid choice!\n";
                 break;
         }
-    } while (choice != 3);
+    } while (mainChoice != 3);
+
     return 0;
 }
