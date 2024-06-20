@@ -22,8 +22,10 @@ public:
     void addCustomer(); // Thêm khách hàng mới
     void deleteCustomer(); // Xóa khách hàng
     void fixCustomer(); // Sửa thông tin khách hàng
+    void findCustomer() ;//tìm khách hàng
     void printlistCustomer() const; // In danh sách khách hàng
     Customer getCustomer(int id) const; // Lấy thông tin khách hàng theo ID
+
 };
 
 // Hàm nhập chuỗi từ người dùng với prompt
@@ -120,6 +122,24 @@ void CustomerManager::fixCustomer() {
     system("pause"); // Tạm dừng chương trình
 }
 
+// In thông tin khách hàng
+void CustomerManager::findCustomer() {
+    system("CLS"); // Xóa màn hình
+    int id;
+    std::cout << "Enter customer ID to find: ";
+    std::cin >> id;
+
+    try {
+        Customer customer = getCustomer(id);
+        std::cout << "Customer ID: " << customer.ID << "\n";
+        std::cout << "Name: " << customer.Name << "\n";
+        std::cout << "Address: " << customer.Address << "\n";
+        std::cout << "Phone: " << customer.Phone << "\n";
+    } catch (const std::exception &e) {
+        std::cerr << "Error: " << e.what() << "\n";
+    }
+    system("pause"); // Tạm dừng chương trình
+}
 // In danh sách khách hàng
 void CustomerManager::printlistCustomer() const {
     system("CLS"); // Xóa màn hình
@@ -149,29 +169,33 @@ void menuCustomer(CustomerManager& manager){
         system("CLS"); // Xóa màn hình
         std::cout << "\t\tBIET DOI HIGH CODE\t" << std::endl;
         std::cout << "====================MENU-CUSTOMER===================\n";
-        std::cout << "==            1.Delete customer                   ==\n";
-        std::cout << "==            2.Add customer                      ==\n";
+        std::cout << "==            1.Add customer                      ==\n";
+        std::cout << "==            2.Delete customer                   ==\n";
         std::cout << "==            3.Edit customer                     ==\n";
-        std::cout << "==            4.Print customer list               ==\n";
-        std::cout << "==            5.Exit                              ==\n";
+        std::cout << "==            4.Find customer                     ==\n";
+        std::cout << "==            5.Print customer list               ==\n";
+        std::cout << "==            6.Exit                              ==\n";
         std::cout << "====================================================\n";
         std::cout <<"Enter your choice:"; 
         std::cin >> choice;
         std::cin.ignore(); // Bỏ qua newline trong bộ đệm
         switch (choice) {
             case 1:
-                manager.deleteCustomer();
+                manager.addCustomer();
                 break;
             case 2:
-                manager.addCustomer();
+                manager.deleteCustomer();
                 break;
             case 3:
                 manager.fixCustomer();
                 break;
             case 4:
+                manager.findCustomer();
+                break;    
+            case 5:
                 manager.printlistCustomer();
                 break;
-            case 5:
+            case 6:
                 std::cout << "Exiting the program.\n";
                 break;
             default:
