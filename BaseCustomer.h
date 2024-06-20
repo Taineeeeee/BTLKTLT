@@ -5,11 +5,11 @@
 
 class BaseCustomer {
 public:
-    int ID;
+    std::string ID;
     std::string Name;
     std::string Address;
 
-    BaseCustomer(int id, const std::string& name, const std::string& address)
+    BaseCustomer(std::string id, const std::string& name, const std::string& address)
         : ID(id), Name(name), Address(address) {}
 };
 

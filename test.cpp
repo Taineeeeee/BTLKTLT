@@ -10,7 +10,7 @@ class Customer : public BaseCustomer {
 public:
     std::string Phone; // Số điện thoại khách hàng
 
-    Customer(int id, const std::string& name, const std::string& address, const std::string& phone)
+    Customer(std::string id, const std::string& name, const std::string& address, const std::string& phone)
         : BaseCustomer(id, name, address), Phone(phone) {}
 };
 
@@ -24,7 +24,7 @@ public:
     void fixCustomer(); // Sửa thông tin khách hàng
     void findCustomer() ;//tìm khách hàng
     void printlistCustomer() const; // In danh sách khách hàng
-    Customer getCustomer(int id) const; // Lấy thông tin khách hàng theo ID
+    Customer getCustomer(std::string id) const; // Lấy thông tin khách hàng theo ID
 
 };
 
@@ -39,7 +39,7 @@ std::string inputstring(const std::string &prompt) {
 // Thêm khách hàng mới vào danh sách
 void CustomerManager::addCustomer() {
     system("CLS"); // Xóa màn hình
-    int id;
+    std::string id;
     std::string name, address, phone;
 
     std::cout << "Enter customer ID: ";
@@ -58,7 +58,7 @@ void CustomerManager::addCustomer() {
 // Xóa khách hàng khỏi danh sách
 void CustomerManager::deleteCustomer() {
     system("CLS"); // Xóa màn hình
-    int id;
+    std::string id;
     std::cout << "Enter customer ID to delete: ";
     std::cin >> id;
 
@@ -79,7 +79,7 @@ void CustomerManager::deleteCustomer() {
 // Sửa thông tin khách hàng
 void CustomerManager::fixCustomer() {
     system("CLS"); // Xóa màn hình
-    int id;
+    std::string id;
     std::cout << "Enter customer ID to fix: ";
     std::cin >> id;
 
@@ -92,6 +92,7 @@ void CustomerManager::fixCustomer() {
         std::cout << "What information do you want to edit?\n";
         std::cout << "1. ID\n2. Name\n3. Address\n4. Phone\n";
         int choice;
+        std::cout<<"Enter your choice: ";
         std::cin >> choice;
         std::cin.ignore(); // Bỏ qua newline trong bộ đệm
 
@@ -125,7 +126,7 @@ void CustomerManager::fixCustomer() {
 // In thông tin khách hàng
 void CustomerManager::findCustomer() {
     system("CLS"); // Xóa màn hình
-    int id;
+    std::string id;
     std::cout << "Enter customer ID to find: ";
     std::cin >> id;
 
@@ -153,7 +154,7 @@ void CustomerManager::printlistCustomer() const {
 }
 
 // Lấy thông tin khách hàng theo ID
-Customer CustomerManager::getCustomer(int id) const {
+Customer CustomerManager::getCustomer(std::string id) const {
     for (const auto& kh : listCustomer) {
         if (kh.ID == id) {
             return kh;
@@ -203,7 +204,7 @@ void menuCustomer(CustomerManager& manager){
                 system("pause"); // Tạm dừng chương trình
                 break;
         }
-    } while (choice != 5);
+    } while (choice != 6);
 }
 
 // Enum trạng thái vận chuyển
@@ -263,7 +264,7 @@ public:
 };
 
 // Tìm khách hàng trong CustomerManager theo ID
-Customer findCustomerById(const CustomerManager& customerManager, int customerId) {
+Customer findCustomerById(const CustomerManager& customerManager, std::string customerId) {
     for (const Customer& customer : customerManager.listCustomer) {
         if (customer.ID == customerId) {
             return customer;
@@ -277,7 +278,7 @@ void ShipmentManager::addShipment(const CustomerManager& customerManager) {
     system("CLS"); // Xóa màn hình
     std::string shipmentId, goodsInfo;
     Date receiveDate, deliveryDate;
-    int customerId;
+    std::string customerId;
 
     std::cout << "Enter shipment ID: ";
     std::cin >> shipmentId;
