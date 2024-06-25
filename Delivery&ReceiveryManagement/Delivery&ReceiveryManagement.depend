@@ -1,0 +1,62 @@
+# depslib dependency file v1.0
+1719328614 source:c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\main.cpp
+	"Manage.h"
+	"Person.h"
+	"Shipper.h"
+	"Order.h"
+
+1719328598 c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\include\manage.h
+	<iostream>
+	<string>
+	<vector>
+	<iomanip>
+	<windows.h>
+	"Person.h"
+	"Shipper.h"
+	"Order.h"
+
+1719325884 source:c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\src\sender.cpp
+	"Sender.h"
+
+1719325885 c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\include\sender.h
+	<iostream>
+	<string>
+
+1719328273 source:c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\src\manage.cpp
+	"Manage.h"
+
+1719286638 c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\include\shipment.h
+	<iostream>
+	<string>
+
+1719286637 source:c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\src\shipment.cpp
+	"Shipment.h"
+
+1719249352 source:c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\src\receiver.cpp
+	"Receiver.h"
+
+1719323535 c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\include\receiver.h
+	<iostream>
+	<string>
+
+1719284946 c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\include\shipper.h
+	<iostream>
+	<string>
+
+1719249560 source:c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\src\shipper.cpp
+	"Shipper.h"
+
+1719326188 source:c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\src\order.cpp
+	"Order.h"
+
+1719328598 c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\include\order.h
+	"Person.h"
+	"Shipper.h"
+
+1719328569 c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\include\person.h
+	<iostream>
+	<string>
+
+1719328598 source:c:\users\admin\desktop\ktlt c&c++\delivery and receive management\delivery&receiverymanagement\src\person.cpp
+	"Person.h"
+
