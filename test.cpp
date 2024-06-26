@@ -3,29 +3,60 @@
 #include <string>
 #include <algorithm>
 #include <stdexcept>
-#include "BaseCustomer.h"
+
+class BaseCustomer {
+protected:
+    std::string ID;
+    std::string Name;
+    std::string Address;
+public:    
+    BaseCustomer(std::string id, const std::string& name, const std::string& address)
+        : ID(id), Name(name), Address(address) {}
+    std::string getID() const { return ID; }
+    std::string getName() const { return Name; }
+    std::string getAddress() const { return Address; }
+friend class SenderManagement;
+friend class ReceiverManagement;
+friend class ShipmentManager;
+};
 
 // Lớp Customer kế thừa từ BaseCustomer
-class Customer : public BaseCustomer {
+class Person : public BaseCustomer {
 public:
-    std::string Phone; // Số điện thoại khách hàng
+    std::string Phone; 
 
-    Customer(std::string id, const std::string& name, const std::string& address, const std::string& phone)
+    Person(const std::string& id, const std::string& name, const std::string& address, const std::string& phone)
         : BaseCustomer(id, name, address), Phone(phone) {}
 };
 
-// Quản lý danh sách khách hàng
-class CustomerManager {
+// Quản lý danh sách người gửi
+class SenderManagement {
 public:
-    std::vector<Customer> listCustomer; // Danh sách khách hàng
+    std::vector<Person> listSenders; // Danh sách người gửi
 
-    void addCustomer(); // Thêm khách hàng mới
-    void deleteCustomer(); // Xóa khách hàng
-    void fixCustomer(); // Sửa thông tin khách hàng
-    void findCustomer() ;//tìm khách hàng
-    void printlistCustomer() const; // In danh sách khách hàng
-    Customer getCustomer(std::string id) const; // Lấy thông tin khách hàng theo ID
+    void addSender(); // Thêm người gửi mới
+    void deleteSender(); // Xóa người gửi
+    void fixSender(); // Sửa thông tin người gửi
+    void findSenderbyID(); // Tìm người gửi
+    void printlistSenders() const; // In danh sách người gửi
+    Person getSender(std::string id) const; // Lấy thông tin người gửi theo ID
 
+friend class ShipmentManager;
+};
+
+// Quản lý danh sách người nhận
+class ReceiverManagement {
+public:
+    std::vector<Person> listReceivers; // Danh sách người nhận
+
+    void addReceiver(); // Thêm người nhận mới
+    void deleteReceiver(); // Xóa người nhận
+    void fixReceiver(); // Sửa thông tin người nhận
+    void findReceiverbyID(); // Tìm người nhận
+    void printlistReceivers() const; // In danh sách người nhận
+    Person getReceiver(std::string id) const; // Lấy thông tin người nhận theo ID
+
+friend class ShipmentManager;
 };
 
 // Hàm nhập chuỗi từ người dùng với prompt
@@ -36,165 +67,248 @@ std::string inputstring(const std::string &prompt) {
     return input;
 }
 
-// Thêm khách hàng mới vào danh sách
-void CustomerManager::addCustomer() {
+// Thêm người gửi mới vào danh sách
+void SenderManagement::addSender() {
     system("CLS"); // Xóa màn hình
-    std::string id;
-    std::string name, address, phone;
+    std::string id, name, address, phone;
 
-    std::cout << "Enter customer ID: ";
+    std::cout << "Enter sender ID: ";
     std::cin >> id;
     std::cin.ignore();
-    name = inputstring("Enter customer name: ");
-    address = inputstring("Enter customer address: ");
-    std::cout << "Enter customer phone number: ";
+    name = inputstring("Enter sender name: ");
+    address = inputstring("Enter sender address: ");
+    std::cout << "Enter sender phone number: ";
     std::cin >> phone;
 
-    listCustomer.push_back(Customer(id, name, address, phone)); // Thêm khách hàng vào danh sách
-    std::cout << "Customer added successfully!\n";
+    listSenders.push_back(Person(id, name, address, phone)); // Thêm người gửi vào danh sách
+    std::cout << "Sender added successfully!\n";
     system("pause"); // Tạm dừng chương trình
 }
 
-// Xóa khách hàng khỏi danh sách
-void CustomerManager::deleteCustomer() {
+// Xóa người gửi khỏi danh sách
+void SenderManagement::deleteSender() {
     system("CLS"); // Xóa màn hình
     std::string id;
-    std::cout << "Enter customer ID to delete: ";
+    std::cout << "Enter sender ID to delete: ";
     std::cin >> id;
 
-    // Tìm khách hàng trong danh sách
-    auto it = std::find_if(listCustomer.begin(), listCustomer.end(), [id](const Customer &ci) {
-        return ci.ID == id;
+    auto it = std::find_if(listSenders.begin(), listSenders.end(), [&id](const Person& sender) {
+        return sender.ID == id;
     });
 
-    if (it != listCustomer.end()) {
-        listCustomer.erase(it); // Xóa khách hàng khỏi danh sách
-        std::cout << "Customer deleted successfully.\n";
+    if (it != listSenders.end()) {
+        listSenders.erase(it);
+        std::cout << "Sender deleted successfully!\n";
     } else {
-        std::cout << "Customer with ID " << id << " does not exist!\n";
+        std::cout << "Sender not found!\n";
     }
     system("pause"); // Tạm dừng chương trình
 }
 
-// Sửa thông tin khách hàng
-void CustomerManager::fixCustomer() {
+// Sửa thông tin người gửi
+void SenderManagement::fixSender() {
     system("CLS"); // Xóa màn hình
     std::string id;
-    std::cout << "Enter customer ID to fix: ";
+    std::cout << "Enter sender ID to modify: ";
     std::cin >> id;
+    std::cin.ignore();
 
-    // Tìm khách hàng trong danh sách
-    auto it = std::find_if(listCustomer.begin(), listCustomer.end(), [id](const Customer &ci) {
-        return ci.ID == id;
+    auto it = std::find_if(listSenders.begin(), listSenders.end(), [&id](const Person& sender) {
+        return sender.ID == id;
     });
 
-    if (it != listCustomer.end()) {
-        std::cout << "What information do you want to edit?\n";
-        std::cout << "1. ID\n2. Name\n3. Address\n4. Phone\n";
-        int choice;
-        std::cout<<"Enter your choice: ";
-        std::cin >> choice;
-        std::cin.ignore(); // Bỏ qua newline trong bộ đệm
-
-        // Cập nhật thông tin khách hàng theo lựa chọn
-        switch (choice) {
-            case 1:
-                std::cout << "Enter the new customer ID: ";
-                std::cin >> it->ID;
-                std::cin.ignore();
-                break;
-            case 2:
-                it->Name = inputstring("Enter the new customer name: ");
-                break;
-            case 3:
-                it->Address = inputstring("Enter the new customer address: ");
-                break;
-            case 4:
-                std::cout << "Enter the new customer phone number: ";
-                std::cin >> it->Phone;
-                break;
-            default:
-                std::cout << "Invalid choice!\n";
-                break;
-        }
+    if (it != listSenders.end()) {
+        it->Name = inputstring("Enter new sender name: ");
+        it->Address = inputstring("Enter new sender address: ");
+        std::cout << "Enter new sender phone number: ";
+        std::cin >> it->Phone;
+        std::cout << "Sender information updated successfully!\n";
     } else {
-        std::cout << "Customer with ID " << id << " does not exist!\n";
+        std::cout << "Sender not found!\n";
     }
     system("pause"); // Tạm dừng chương trình
 }
 
-// In thông tin khách hàng
-void CustomerManager::findCustomer() {
+// Tìm người gửi theo ID
+void SenderManagement::findSenderbyID() {
     system("CLS"); // Xóa màn hình
     std::string id;
-    std::cout << "Enter customer ID to find: ";
+    std::cout << "Enter sender ID to find: ";
     std::cin >> id;
 
-    try {
-        Customer customer = getCustomer(id);
-        std::cout << "Customer ID: " << customer.ID << "\n";
-        std::cout << "Name: " << customer.Name << "\n";
-        std::cout << "Address: " << customer.Address << "\n";
-        std::cout << "Phone: " << customer.Phone << "\n";
-    } catch (const std::exception &e) {
-        std::cerr << "Error: " << e.what() << "\n";
+    auto it = std::find_if(listSenders.begin(), listSenders.end(), [&id](const Person& sender) {
+        return sender.ID == id;
+    });
+
+    if (it != listSenders.end()) {
+        std::cout << "Sender found:\n";
+        std::cout << "ID: " << it->ID << "\nName: " << it->Name << "\nAddress: " << it->Address << "\nPhone: " << it->Phone << "\n";
+    } else {
+        std::cout << "Sender not found!\n";
     }
     system("pause"); // Tạm dừng chương trình
 }
-// In danh sách khách hàng
-void CustomerManager::printlistCustomer() const {
+
+// In danh sách người gửi
+void SenderManagement::printlistSenders() const {
     system("CLS"); // Xóa màn hình
-    for (const auto &kh : listCustomer) {
-        std::cout << "\nCustomer ID: " << kh.ID;
-        std::cout << "\nCustomer Name: " << kh.Name;
-        std::cout << "\nCustomer Address: " << kh.Address;
-        std::cout << "\nCustomer Phone Number: " << kh.Phone << "\n";
+    std::cout << "List of Senders:\n";
+    for (const auto& sender : listSenders) {
+        std::cout << "ID: " << sender.ID << "\nName: " << sender.Name << "\nAddress: " << sender.Address << "\nPhone: " << sender.Phone << "\n-------------------\n";
     }
     system("pause"); // Tạm dừng chương trình
 }
 
-// Lấy thông tin khách hàng theo ID
-Customer CustomerManager::getCustomer(std::string id) const {
-    for (const auto& kh : listCustomer) {
-        if (kh.ID == id) {
-            return kh;
-        }
+// Lấy thông tin người gửi theo ID
+Person SenderManagement::getSender(std::string id) const {
+    auto it = std::find_if(listSenders.begin(), listSenders.end(), [&id](const Person& sender) {
+        return sender.ID == id;
+    });
+
+    if (it != listSenders.end()) {
+        return *it;
+    } else {
+        throw std::runtime_error("Sender not found");
     }
-    throw std::invalid_argument("Customer ID not found.");
 }
 
-// Menu quản lý khách hàng
-void menuCustomer(CustomerManager& manager){
+// Thêm người nhận mới vào danh sách
+void ReceiverManagement::addReceiver() {
+    system("CLS"); // Xóa màn hình
+    std::string id, name, address, phone;
+
+    std::cout << "Enter receiver ID: ";
+    std::cin >> id;
+    std::cin.ignore();
+    name = inputstring("Enter receiver name: ");
+    address = inputstring("Enter receiver address: ");
+    std::cout << "Enter receiver phone number: ";
+    std::cin >> phone;
+
+    listReceivers.push_back(Person(id, name, address, phone)); // Thêm người nhận vào danh sách
+    std::cout << "Receiver added successfully!\n";
+    system("pause"); // Tạm dừng chương trình
+}
+
+// Xóa người nhận khỏi danh sách
+void ReceiverManagement::deleteReceiver() {
+    system("CLS"); // Xóa màn hình
+    std::string id;
+    std::cout << "Enter receiver ID to delete: ";
+    std::cin >> id;
+
+    auto it = std::find_if(listReceivers.begin(), listReceivers.end(), [&id](const Person& receiver) {
+        return receiver.ID == id;
+    });
+
+    if (it != listReceivers.end()) {
+        listReceivers.erase(it);
+        std::cout << "Receiver deleted successfully!\n";
+    } else {
+        std::cout << "Receiver not found!\n";
+    }
+    system("pause"); // Tạm dừng chương trình
+}
+
+// Sửa thông tin người nhận
+void ReceiverManagement::fixReceiver() {
+    system("CLS"); // Xóa màn hình
+    std::string id;
+    std::cout << "Enter receiver ID to modify: ";
+    std::cin >> id;
+    std::cin.ignore();
+
+    auto it = std::find_if(listReceivers.begin(), listReceivers.end(), [&id](const Person& receiver) {
+        return receiver.ID == id;
+    });
+
+    if (it != listReceivers.end()) {
+        it->Name = inputstring("Enter new receiver name: ");
+        it->Address = inputstring("Enter new receiver address: ");
+        std::cout << "Enter new receiver phone number: ";
+        std::cin >> it->Phone;
+        std::cout << "Receiver information updated successfully!\n";
+    } else {
+        std::cout << "Receiver not found!\n";
+    }
+    system("pause"); // Tạm dừng chương trình
+}
+
+// Tìm người nhận theo ID
+void ReceiverManagement::findReceiverbyID() {
+    system("CLS"); // Xóa màn hình
+    std::string id;
+    std::cout << "Enter receiver ID to find: ";
+    std::cin >> id;
+
+    auto it = std::find_if(listReceivers.begin(), listReceivers.end(), [&id](const Person& receiver) {
+        return receiver.ID == id;
+    });
+
+    if (it != listReceivers.end()) {
+        std::cout << "Receiver found:\n";
+        std::cout << "ID: " << it->ID << "\nName: " << it->Name << "\nAddress: " << it->Address << "\nPhone: " << it->Phone << "\n";
+    } else {
+        std::cout << "Receiver not found!\n";
+    }
+    system("pause"); // Tạm dừng chương trình
+}
+
+// In danh sách người nhận
+void ReceiverManagement::printlistReceivers() const {
+    system("CLS"); // Xóa màn hình
+    std::cout << "List of Receivers:\n";
+    for (const auto& receiver : listReceivers) {
+        std::cout << "ID: " << receiver.ID << "\nName: " << receiver.Name << "\nAddress: " << receiver.Address << "\nPhone: " << receiver.Phone << "\n-------------------\n";
+    }
+    system("pause"); // Tạm dừng chương trình
+}
+
+// Lấy thông tin người nhận theo ID
+Person ReceiverManagement::getReceiver(std::string id) const {
+    auto it = std::find_if(listReceivers.begin(), listReceivers.end(), [&id](const Person& receiver) {
+        return receiver.ID == id;
+    });
+
+    if (it != listReceivers.end()) {
+        return *it;
+    } else {
+        throw std::runtime_error("Receiver not found");
+    }
+}
+
+// Menu quản lý người gửi
+void menuSender(SenderManagement& manager){
     int choice;
     do {
         system("CLS"); // Xóa màn hình
         std::cout << "\t\tBIET DOI HIGH CODE\t" << std::endl;
-        std::cout << "====================MENU-CUSTOMER===================\n";
-        std::cout << "==            1.Add customer                      ==\n";
-        std::cout << "==            2.Delete customer                   ==\n";
-        std::cout << "==            3.Edit customer                     ==\n";
-        std::cout << "==            4.Find customer                     ==\n";
-        std::cout << "==            5.Print customer list               ==\n";
-        std::cout << "==            6.Exit                              ==\n";
-        std::cout << "====================================================\n";
-        std::cout <<"Enter your choice:"; 
+        std::cout << "====================MENU-SENDER===================\n";
+        std::cout << "==            1.Add Sender                      ==\n";
+        std::cout << "==            2.Delete Sender                   ==\n";
+        std::cout << "==            3.Edit Sender                     ==\n";
+        std::cout << "==            4.Find Sender                     ==\n";
+        std::cout << "==            5.Print Sender list               ==\n";
+        std::cout << "==            6.Exit                            ==\n";
+        std::cout << "==================================================\n";
+        std::cout <<" Enter your choice:"; 
         std::cin >> choice;
         std::cin.ignore(); // Bỏ qua newline trong bộ đệm
         switch (choice) {
             case 1:
-                manager.addCustomer();
+                manager.addSender();
                 break;
             case 2:
-                manager.deleteCustomer();
+                manager.deleteSender();
                 break;
             case 3:
-                manager.fixCustomer();
+                manager.fixSender();
                 break;
             case 4:
-                manager.findCustomer();
+                manager.findSenderbyID();
                 break;    
             case 5:
-                manager.printlistCustomer();
+                manager.printlistSenders();
                 break;
             case 6:
                 std::cout << "Exiting the program.\n";
@@ -206,6 +320,52 @@ void menuCustomer(CustomerManager& manager){
         }
     } while (choice != 6);
 }
+
+// Menu quản lí người nhận
+void menuReceiver(ReceiverManagement& manager){
+    int choice;
+    do {
+        system("CLS"); // Xóa màn hình
+        std::cout << "\t\tBIET DOI HIGH CODE\t" << std::endl;
+        std::cout << "====================MENU-RECEIVER===================\n";
+        std::cout << "==            1.Add Receiver                      ==\n";
+        std::cout << "==            2.Delete Receiver                   ==\n";
+        std::cout << "==            3.Edit Receiver                     ==\n";
+        std::cout << "==            4.Find Receiver                     ==\n";
+        std::cout << "==            5.Print Receiver list               ==\n";
+        std::cout << "==            6.Exit                              ==\n";
+        std::cout << "====================================================\n";
+        std::cout <<"Enter your choice:"; 
+        std::cin >> choice;
+        std::cin.ignore(); // Bỏ qua newline trong bộ đệm
+        switch (choice) {
+            case 1:
+                manager.addReceiver();
+                break;
+            case 2:
+                manager.deleteReceiver();
+                break;
+            case 3:
+                manager.fixReceiver();
+                break;
+            case 4:
+                manager.findReceiverbyID();
+                break;    
+            case 5:
+                manager.printlistReceivers();
+                break;
+            case 6:
+                std::cout << "Exiting the program.\n";
+                break;
+            default:
+                std::cout << "Invalid choice!\n";
+                system("pause"); // Tạm dừng chương trình
+                break;
+        }
+    } while (choice != 6);
+}
+
+
 
 // Enum trạng thái vận chuyển
 enum ShipmentStatus { Received, InTransit, Delivered };
@@ -223,25 +383,30 @@ std::string dateToString(const Date& date) {
     return std::to_string(date.day) + "/" + std::to_string(date.month) + "/" + std::to_string(date.year);
 }
 
-// Lớp Shipment kế thừa từ BaseCustomer
-class Shipment : public BaseCustomer {
+// Lớp Shipment 
+class Shipment  {
 public:
     std::string shipmentId;
     Date receiveDate, deliveryDate;
     std::string goodsInfo;
     ShipmentStatus status;
     PaymentStatus pstatus;
+    Person sender;
+    Person receiver;
 
-    Shipment(std::string id, Date rdate, const BaseCustomer& customer, std::string goods, Date ddate)
-        : BaseCustomer(customer), shipmentId(std::move(id)), receiveDate(std::move(rdate)), deliveryDate(std::move(ddate)), goodsInfo(std::move(goods)), status(Received), pstatus(Unpaid) {}
+
+    Shipment(std::string id, Date rdate, const Person& send,const Person& recei, std::string goods, Date ddate)
+        : shipmentId(std::move(id)), receiveDate(std::move(rdate)), deliveryDate(std::move(ddate)), goodsInfo(std::move(goods)), status(Received), pstatus(Unpaid),sender(send),receiver(recei) {}
 
     // In thông tin lô hàng
     void printInfo() const {
         std::cout << "Shipment ID: " << shipmentId << "\n"
             << "Receive Date: " << dateToString(receiveDate) << "\n"
             << "Delivery Date: " << dateToString(deliveryDate) << "\n"
-            << "Customer Name: " << Name << "\n"
-            << "Delivery Address: " << Address << "\n"
+            << "Sender Name: " << sender.getName() << "\n"
+            << "Sender Address: " << sender.getAddress() << "\n"
+            << "Receiver Name: " << receiver.getName() << "\n"
+            << "Receiver Address: " << receiver.getAddress() << "\n"
             << "Goods Info: " << goodsInfo << "\n"
             << "Shipment Status: " << (status == Received ? "Received" : status == InTransit ? "In Transit" : "Delivered") << "\n"
             << "Payment Status: " << (pstatus == Unpaid ? "Unpaid" : "Paid") << "\n";
@@ -254,40 +419,30 @@ private:
     std::vector<Shipment> shipments; // Danh sách lô hàng
 
 public:
-    void addShipment(const CustomerManager& customerManager); // Thêm lô hàng mới
+    void addShipment(const SenderManagement& send,const ReceiverManagement& recei); // Thêm lô hàng mới
     void findShipment(const std::string& id) const; // Tìm lô hàng theo ID
     void updateShipment(const std::string& id); // Cập nhật thông tin lô hàng
     void removeShipment(const std::string& id); // Xóa lô hàng
     void printListShipment() const; // In danh sách lô hàng
     void sortShipmentsById(bool ascending = true); // Sắp xếp lô hàng theo ID
-    void sortShipmentsByName(bool ascending = true); // Sắp xếp lô hàng theo tên khách hàng
 };
-
-// Tìm khách hàng trong CustomerManager theo ID
-Customer findCustomerById(const CustomerManager& customerManager, std::string customerId) {
-    for (const Customer& customer : customerManager.listCustomer) {
-        if (customer.ID == customerId) {
-            return customer;
-        }
-    }
-    throw std::invalid_argument("Customer ID not found.");
-}
-
 // Thêm lô hàng mới
-void ShipmentManager::addShipment(const CustomerManager& customerManager) {
+void ShipmentManager::addShipment(const SenderManagement& send,const ReceiverManagement& recei) {
     system("CLS"); // Xóa màn hình
-    std::string shipmentId, goodsInfo;
+    std::string shipmentId, goodsInfo, senId, receId;
     Date receiveDate, deliveryDate;
-    std::string customerId;
 
     std::cout << "Enter shipment ID: ";
     std::cin >> shipmentId;
     std::cout << "Enter receive date (day month year): ";
     std::cin >> receiveDate.day >> receiveDate.month >> receiveDate.year;
-    std::cout << "Enter customer ID: ";
-    std::cin >> customerId;
+    std::cout << "Enter Sender ID: ";
+    std::cin >> senId;
+    std::cout << "Enter Receiver ID: ";
+    std::cin >> receId;
 
-    Customer customer = findCustomerById(customerManager, customerId);
+    Person sender = send.getSender(senId);
+    Person receiver = recei.getReceiver(receId);
 
     std::cin.ignore(); // Bỏ qua newline trong bộ đệm
     std::cout << "Enter goods info: ";
@@ -295,7 +450,7 @@ void ShipmentManager::addShipment(const CustomerManager& customerManager) {
     std::cout << "Enter delivery date (day month year): ";
     std::cin >> deliveryDate.day >> deliveryDate.month >> deliveryDate.year;
 
-    shipments.emplace_back(shipmentId, receiveDate, customer, goodsInfo, deliveryDate); // Thêm lô hàng vào danh sách
+    shipments.emplace_back(shipmentId, receiveDate,sender,receiver, goodsInfo, deliveryDate); // Thêm lô hàng vào danh sách
     std::cout << "Shipment added successfully.\n";
     system("pause"); // Tạm dừng chương trình
 }
@@ -378,6 +533,7 @@ void ShipmentManager::removeShipment(const std::string& id) {
     }
     system("pause"); // Tạm dừng chương trình
 }
+
 // Sắp xếp lô hàng theo ID
 void ShipmentManager::sortShipmentsById(bool ascending) {
     system("CLS");
@@ -385,16 +541,6 @@ void ShipmentManager::sortShipmentsById(bool ascending) {
     system("pause");
     std::sort(shipments.begin(), shipments.end(), [ascending](const Shipment& a, const Shipment& b) {
     return ascending ? a.shipmentId < b.shipmentId : a.shipmentId > b.shipmentId;
-});
-}
-
-// Sắp xếp lô hàng theo tên khách hàng
-void ShipmentManager::sortShipmentsByName(bool ascending) {
-    system("CLS");
-    std::cout<<"Shipments sort by Name successfully\n";
-    system("pause");
-    std::sort(shipments.begin(), shipments.end(), [ascending](const Shipment& a, const Shipment& b) {
-    return ascending ? a.Name < b.Name : a.Name > b.Name;
 });
 }
 
@@ -409,7 +555,7 @@ void ShipmentManager::printListShipment() const {
 }
 
 // Menu quản lý lô hàng
-void menuShipment(ShipmentManager& shipmentManager, const CustomerManager& customerManager) {
+void menuShipment(ShipmentManager& shipmentManager, const SenderManagement sender,const ReceiverManagement receiver) {
     int choice;
     do {
         system("CLS"); // Xóa màn hình
@@ -421,15 +567,14 @@ void menuShipment(ShipmentManager& shipmentManager, const CustomerManager& custo
         std::cout << "==            4. Remove Shipment                  ==\n";
         std::cout << "==            5. Print Shipment List              ==\n";
         std::cout << "==            6. Sort shipments by ID             ==\n";
-        std::cout << "==            7. Sort shipments by name           ==\n";
-        std::cout << "==            8. Exit                             ==\n";
+        std::cout << "==            7. Exit                             ==\n";
         std::cout << "====================================================\n";
         std::cout <<"Enter your choice:";
         std::cin >> choice;
         std::cin.ignore(); // Bỏ qua newline trong bộ đệm
         switch (choice) {
             case 1:
-                shipmentManager.addShipment(customerManager);
+                shipmentManager.addShipment(sender,receiver);
                 break;
             case 2:
                 {
@@ -459,12 +604,9 @@ void menuShipment(ShipmentManager& shipmentManager, const CustomerManager& custo
                 shipmentManager.printListShipment();
                 break;    
             case 6:
-                shipmentManager.sortShipmentsById();
+                shipmentManager.sortShipmentsById("Shipment will sort by ID!\n\n\n");
                 break;
             case 7:
-                shipmentManager.sortShipmentsByName();
-                break;
-            case 8:
                 std::cout << "Exiting the shipment management system.\n";
                 break;
             default:
@@ -472,10 +614,11 @@ void menuShipment(ShipmentManager& shipmentManager, const CustomerManager& custo
                 system("pause"); // Tạm dừng chương trình
                 break;
     }
-} while (choice != 8);
+} while (choice != 7);
 }
 int main() {
-    CustomerManager customerManager;
+    SenderManagement sender;
+    ReceiverManagement receiver;
     ShipmentManager shipmentManager;
 
     int choice;
@@ -483,21 +626,25 @@ int main() {
         system("CLS"); // Xóa màn hình
         std::cout << "\t\tBIET DOI HIGH CODE\t" << std::endl;
         std::cout << "=======================MENU=========================\n";
-        std::cout << "==            1. Customer Management              ==\n";
-        std::cout << "==            2. Shipment Management              ==\n";
-        std::cout << "==            3. Exit                             ==\n";
+        std::cout << "==            1. Sender Management                ==\n";
+        std::cout << "==            2. Receiver Management              ==\n";
+        std::cout << "==            3. Shipment Management              ==\n";
+        std::cout << "==            4. Exit                             ==\n";
         std::cout << "====================================================\n";
         std::cout <<"Enter your choice:"; 
         std::cin >> choice;
         std::cin.ignore(); // Bỏ qua newline trong bộ đệm
         switch (choice) {
             case 1:
-                menuCustomer(customerManager);
+                menuSender(sender);
                 break;
             case 2:
-                menuShipment(shipmentManager, customerManager);
+                menuReceiver(receiver);
                 break;
             case 3:
+                menuShipment(shipmentManager,sender,receiver);
+                break;
+            case 4:
                 std::cout << "Exiting the program.\n";
                 break;
             default:
@@ -505,7 +652,7 @@ int main() {
                 system("pause"); // Tạm dừng chương trình
                 break;
         }
-    } while (choice != 3);
+    } while (choice != 4);
 
     return 0;
 }
